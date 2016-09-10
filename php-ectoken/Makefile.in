@@ -1,0 +1,4 @@
+LTLIBRARY_NAME    = libcrypto.la
+LTLIBRARY_SOURCES = php_ectoken.c
+LTLIBRARY_SHARED_LIBADD = -lcrypto
+include $(top_srcdir)/build/dynlib.mk

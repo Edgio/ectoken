@@ -1,0 +1,28 @@
+Verizon Digital Media Services Token-Based Authentication Version 3.0
+Copyright (C) Verizon.  All rights reserved.
+
+Use of source and binary forms, with or without modification is permitted provided
+that there is written consent by Verizon. Redistribution in source and binary
+forms  is not permitted.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+This software is tested on Ubuntu 12.04 and 14.04 using the 1.0.1 stream of OpenSSL.
+
+To use ec_encrypt tool:
+
+For encrypting:
+"ec_encrypt string1 string2" will: encrypt string2 using string1 as a key.
+"ec_encrypt encrypt string1 string2" will: encrypt string2 using string1 as a key.
+
+For decrypting:
+"ec_encrypt decrypt string1 string2" will: decrypt string2 using string1 as a key.
