@@ -1,8 +1,24 @@
 #!/bin/bash
 
+# /**
+# * Copyright (C) 2016 Verizon. All Rights Reserved.
+# *
+# * Licensed under the Apache License, Version 2.0 (the "License");
+# * you may not use this file except in compliance with the License.
+# * You may obtain a copy of the License at
+# *     http://www.apache.org/licenses/LICENSE-2.0
+# *
+# * Unless required by applicable law or agreed to in writing, software
+# * distributed under the License is distributed on an "AS IS" BASIS,
+# * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# * See the License for the specific language governing permissions and
+# * limitations under the License.
+# */
+
+
 # C example
 #   $./c-ectoken/ecencrypt/ec_encrypt decrypt IM_A_KEY $(./c-ectoken/ecencrypt/ec_encrypt IM_A_KEY I_A_SUPER_COOL_STRING)
-#   r=r49J&I_A_SUPER_COOL_STRING&ec_secure=052&r=KJjvxlI
+#   I_A_SUPER_COOL_STRING&ec_secure=052
 #   $
 # C++ example
 #   $ ./c++-ectoken/ectoken -d IM_A_KEY $(./c++-ectoken/ectoken -e IM_A_KEY I_A_SUPER_COOL_STRING)
@@ -10,11 +26,11 @@
 #   $
 # PHP example
 #   $ ./c-ectoken/ecencrypt/ec_encrypt decrypt 12345678 "$(php -d extension=php-ectoken/.libs/ectoken.so -r '$token = ectoken_generate("12345678", "ec_expire=1185943200&ec_clientip=111.11.111.11&ec_country_allow=US&ec_ref_allow=ec1.com"); echo $token;')"
-#   r=fjEo&ec_expire=1185943200&ec_clientip=111.11.111.11&ec_country_allow=US&ec_ref_allow=ec1.com&ec_secure=111&r=LBM9TC
+#   ec_expire=1185943200&ec_clientip=111.11.111.11&ec_country_allow=US&ec_ref_allow=ec1.com&ec_secure=111
 #   $
 # Perl example
 #   $./c-ectoken/ecencrypt/ec_encrypt decrypt IM_A_KEY $(./perl-ectoken/ectoken.pl IM_A_KEY I_AM_A_COOL_STRING)
-#   r=sAU8&I_AM_A_COOL_STRING&ec_secure=047&r=DTfVu
+#   I_AM_A_COOL_STRING&ec_secure=047
 #   $
 # Java example
 #   $ java ECToken  encrypt "yourkey" "yourmessage"

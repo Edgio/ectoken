@@ -1,3 +1,4 @@
+
 # /**
 # * Copyright (C) 2016 Verizon. All Rights Reserved.
 # *
@@ -13,7 +14,10 @@
 # * limitations under the License.
 # */
 
-LTLIBRARY_NAME    = libcrypto.la
-LTLIBRARY_SOURCES = php_ectoken.c
-LTLIBRARY_SHARED_LIBADD = -lcrypto
-include $(top_srcdir)/build/dynlib.mk
+==============================================================
+ ectoken
+ Copyright (C) 2016  Verizon.
+==============================================================
+
+This product includes software developed by
+Verizon (www.verizon.com; www.github.com/Verizon).
