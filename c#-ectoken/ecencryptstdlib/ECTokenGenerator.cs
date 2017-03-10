@@ -60,7 +60,7 @@ namespace ecencryptstdlib
         /// <param name="deniedReferrers">Comma separated list of denied referrers , Example: "www.contoso.com,*.consoto.com,missing" </param>
         /// <param name="allowedProtocol">Only allows requests from specified protocol, Example: "http" or "https" </param>
         /// <param name="deniedProtocol">Denies requests from specified protocol, Example: "http" or "https" </param>
-        /// <param name=""></param>
+        /// <param name="allowedUrls">allows you to tailor tokens to a particular asset or path. It restricts access to requests whose URL start with a specific relative path. You can input multiple paths separating each path with a comma. URLs are case-sensitive. Depending on the requirement, you can set up different value to provide different level of access</param>
         /// <returns></returns>
         public string EncryptV3(string key,
             TimeSpan expirationTimeSpan,
@@ -70,7 +70,8 @@ namespace ecencryptstdlib
             string allowedReferrers = null,
             string deniedReferrers = null,
             string allowedProtocol = null,
-            string deniedProtocol = null)
+            string deniedProtocol = null,
+            string allowedUrls = null)
         {
             DateTime expTime = DateTime.UtcNow + expirationTimeSpan;
             return EncryptV3(key, expTime, clientIPAddress, allowedCountries, deniedCountries, allowedReferrers, deniedReferrers,
@@ -89,7 +90,7 @@ namespace ecencryptstdlib
         /// <param name="deniedReferrers">Comma separated list of denied referrers , Example: "www.contoso.com,*.consoto.com,missing" </param>
         /// <param name="allowedProtocol">Only allows requests from specified protocol, Example: "http" or "https" </param>
         /// <param name="deniedProtocol">Denies requests from specified protocol, Example: "http" or "https" </param>
-        /// <param name=""></param>
+        /// <param name="allowedUrls">allows you to tailor tokens to a particular asset or path. It restricts access to requests whose URL start with a specific relative path. You can input multiple paths separating each path with a comma. URLs are case-sensitive. Depending on the requirement, you can set up different value to provide different level of access</param>
         /// <returns></returns>
         public string EncryptV3(string key,
         DateTime expirationTime,
@@ -99,7 +100,8 @@ namespace ecencryptstdlib
         string allowedReferrers = null,
         string deniedReferrers = null,
         string allowedProtocol = null,
-        string deniedProtocol = null)
+        string deniedProtocol = null,
+        string allowedUrls = null)
         {
             StringBuilder token = new StringBuilder();
             /// ec_expire=1185943200&ec_clientip=111.11.111.11&ec_country_allow=US&ec_ref_allow=ec1.com"
@@ -115,6 +117,7 @@ namespace ecencryptstdlib
             if (!string.IsNullOrEmpty(deniedReferrers)) token.Append($"&ec-ref-deny={deniedReferrers}");
             if (!string.IsNullOrEmpty(allowedProtocol)) token.Append($"&ec-proto-allow={allowedProtocol}");
             if (!string.IsNullOrEmpty(deniedProtocol)) token.Append($"&ec-proto-deny={deniedProtocol}");
+            if (!string.IsNullOrEmpty(allowedUrls)) token.Append($"&ec-url-allow={allowedUrls}");
             return EncryptV3(key, token.ToString(), false);
         }
 
