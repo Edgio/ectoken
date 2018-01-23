@@ -4,7 +4,7 @@
 
 Token-Based Authentication safeguards against hotlinking by adding a token requirement to requests for content secured by it. This token, which must be defined in the request URL's query string, defines the criteria that must be met before the requested content may be served via the CDN. This repository contains the following token generation resources:
 - [Linux binaries and Windows executable](https://github.com/VerizonDigital/ectoken/releases/latest)
-- Source code for various languages (e.g., [C#](c#-ectoken/.), [Python](python-ectoken/.), [PHP](php-ectoken/.), etc.)
+- Source code for various languages (e.g., [C#](c%23-ectoken/.), [Python](python-ectoken/.), [PHP](php-ectoken/.), etc.)
 
 ## Quick Start
 
