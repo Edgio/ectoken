@@ -274,7 +274,7 @@ namespace ecencryptstdlib
                     var len = cipher.ProcessBytes(cipherText, 0, cipherText.Length, plainText, 0);
                     cipher.DoFinal(plainText, len);
                 }
-                catch (InvalidCipherTextException)
+                catch (InvalidCipherTextException ee)
                 {
                     return null;
                 }
