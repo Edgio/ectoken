@@ -112,12 +112,12 @@ namespace ecencryptstdlib
             token.Append($"ec_expire={epoch}");
             if (!string.IsNullOrEmpty(clientIPAddress)) token.Append($"&ec_clientip={clientIPAddress}");
             if (!string.IsNullOrEmpty(allowedCountries)) token.Append($"&ec_country_allow={allowedCountries}");
-            if (!string.IsNullOrEmpty(deniedCountries)) token.Append($"&ec-country-deny={deniedCountries}");
-            if (!string.IsNullOrEmpty(allowedReferrers)) token.Append($"&ec-ref-allow={allowedReferrers}");
-            if (!string.IsNullOrEmpty(deniedReferrers)) token.Append($"&ec-ref-deny={deniedReferrers}");
-            if (!string.IsNullOrEmpty(allowedProtocol)) token.Append($"&ec-proto-allow={allowedProtocol}");
-            if (!string.IsNullOrEmpty(deniedProtocol)) token.Append($"&ec-proto-deny={deniedProtocol}");
-            if (!string.IsNullOrEmpty(allowedUrls)) token.Append($"&ec-url-allow={allowedUrls}");
+            if (!string.IsNullOrEmpty(deniedCountries)) token.Append($"&ec_country_deny={deniedCountries}");
+            if (!string.IsNullOrEmpty(allowedReferrers)) token.Append($"&ec_ref_allow={allowedReferrers}");
+            if (!string.IsNullOrEmpty(deniedReferrers)) token.Append($"&ec_ref_deny={deniedReferrers}");
+            if (!string.IsNullOrEmpty(allowedProtocol)) token.Append($"&ec_proto_allow={allowedProtocol}");
+            if (!string.IsNullOrEmpty(deniedProtocol)) token.Append($"&ec_proto_deny={deniedProtocol}");
+            if (!string.IsNullOrEmpty(allowedUrls)) token.Append($"&ec_url_allow={allowedUrls}");
             return EncryptV3(key, token.ToString(), false);
         }
 
