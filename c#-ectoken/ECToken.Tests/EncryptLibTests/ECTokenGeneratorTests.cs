@@ -1,14 +1,14 @@
 ﻿using System;
 using ecencryptstdlib;
 using ECToken.Tests.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace ECToken.Tests.EncryptLibTests
 {
-    [TestClass]
+    
     public class ECTokenGeneratorTests
     {
-        [TestMethod]
+        [Fact]
         public void EncryptV3_WithDateTimeAndClientIP_ReturnsEcnryptedTokenWithBoth()
         {
             //arrange
@@ -22,14 +22,14 @@ namespace ECToken.Tests.EncryptLibTests
 
             //assert
 
-            Assert.IsNotNull(token);
+            Assert.NotNull(token);
             var decryptdToken = generator.DecryptV3(key, token, false);
 
             string expected = $"ec_expire={expireTime.FromEpoch()}&ec_clientip={clientIp}";
-            Assert.AreEqual(expected, decryptdToken);
+            Assert.Equal(expected, decryptdToken);
         }
 
-        [TestMethod]
+        [Fact]
         public void EncryptV3_WithDateTimeOnly_ReturnsEncryptedTokenWithOnlyDate()
         {
             //arrange
@@ -41,11 +41,11 @@ namespace ECToken.Tests.EncryptLibTests
             var token = generator.EncryptV3(key, expireTime);
 
             //assert
-            Assert.IsNotNull(token);
+            Assert.NotNull(token);
             var decryptdToken = generator.DecryptV3(key, token, false);
 
             string expected = $"ec_expire={expireTime.FromEpoch()}";
-            Assert.AreEqual(expected, decryptdToken);
+            Assert.Equal(expected, decryptdToken);
         }
 
     }
