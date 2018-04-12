@@ -13,27 +13,20 @@
 # * limitations under the License.
 # */
 
-.PHONY: all 32 64
+.PHONY: all
 
 OPENSSL_ROOT=
 OPENSSL_INCLUDE=
 OPENSSL_LIBS=-lssl -lcrypto
 
-all: 32 64 libectoken3.a ectoken_v3
+all: libectoken3.a ectoken3 ectoken3_test
 
 # packages needed for 32-bit compilation:
 # lib32gcc-4.8
 # libssl-dev:i386
-32: ec_encrypt.c ectoken_v3.c base64.c
-	@echo "packages needed for 32-bit compilation on Ubuntu 14.04"
-	@echo "  lib32gcc-4.8"
-	@echo "  libssl-dev:i386"
-	gcc -m32 -O2 -Wall -Werror -std=gnu99 ec_encrypt.c ectoken_v3.c base64.c -o 32/ectoken3 $(OPENSSL_LIBS) $(OPENSSL_INCLUDE) -lm
-	strip 32/ectoken3
-
-64: ec_encrypt.c ectoken_v3.c base64.c
-	gcc -m64 -O2 -Wall -Werror -std=gnu99 ec_encrypt.c ectoken_v3.c base64.c -o 64/ectoken3 $(OPENSSL_LIBS) $(OPENSSL_INCLUDE) -lm
-	strip 64/ectoken3
+ectoken3: ec_encrypt.c ectoken_v3.c base64.c
+	gcc -m64 -O2 -Wall -Werror -std=gnu99 ec_encrypt.c ectoken_v3.c base64.c -o $@ $(OPENSSL_LIBS) $(OPENSSL_INCLUDE) -lm
+	strip ectoken3
 
 libectoken3.a: ectoken_v3.o base64.o
 	ar rcs $@ ectoken_v3.o base64.o
@@ -45,11 +38,11 @@ ectoken_v3.o: ectoken_v3.c
 base64.o: base64.c
 	gcc -c -std=c99 base64.c -lm -g -Wall -Wno-format -Werror -O2 -o $@ -fPIC $(OPENSSL_LIBS) $(OPENSSL_INCLUDE)
 
-ectoken_v3: ectoken_v3_test.o libectoken3.a
+ectoken3_test: ectoken_v3_test.o libectoken3.a
 	gcc -std=c99 ectoken_v3_test.o libectoken3.a -lm -g -Wall -Wno-format -O2 -o $@ $(OPENSSL_LIBS) $(OPENSSL_INCLUDE)
 
 # fails to link?
-ectoken_v3_static:
+ectoken3_static:
 	gcc -std=c99 ectoken_v3.c base64.c -static -Wall -Wno-format -Werror -O2 -o $@ $(OPENSSL_LIBS) $(OPENSSL_INCLUDE)
 
 analyze:
@@ -83,4 +76,4 @@ analyze:
 
 
 clean:
-	-rm *.o *.a ectoken_v3 64/* 32/* ectoken_test_analyze
+	-rm *.o *.a ectoken_v3 ectoken_test_analyze

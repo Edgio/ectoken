@@ -13,29 +13,37 @@
 # * limitations under the License.
 # */
 
-.PHONY: all check install install-source
+.PHONY: all check install install-source c-ectoken cpp-ectoken java-ectoken php-ectoken python-ectoken
 
-all:
+all: c-ectoken cpp-ectoken java-ectoken php-ectoken python-ectoken
+
+c-ectoken:
 	$(MAKE) -C c-ectoken/ecencrypt
+
+cpp-ectoken:
 	$(MAKE) -C c++-ectoken
-	cd php-ectoken && ./build.sh
+
+java-ectoken:
 	$(MAKE) -C java-ectoken
+
+php-ectoken:
+	cd php-ectoken && ./build.sh
+
+python-ectoken:
+	export
 	$(MAKE) -C python-ectoken
 
-check: ./c-ectoken/ecencrypt/32/ectoken3 ./c-ectoken/ecencrypt/64/ectoken3 ./c++-ectoken/ectoken3 ./php-ectoken/.libs/ectoken.so ./java-ectoken/ECToken3.java
+check: all
     # run as many language-to-language checks as we have binaries for
 	@./check_language_interoperability.sh
 
-install-built: ./c-ectoken/ecencrypt/32/ectoken3 ./c-ectoken/ecencrypt/64/ectoken3
+install-built: ./c-ectoken/ecencrypt/ectoken3
     	# install the binaries in the directory housing them for easier deployment
-	@mkdir -p TokenGenerator/Linux/32
-	@mkdir -p TokenGenerator/Linux/64
+	@mkdir -p TokenGenerator/Linux
 	@mkdir -p TokenGenerator/Windows
 	@mkdir -p source_packages
-	cp ./c-ectoken/ecencrypt/32/ectoken3 TokenGenerator/Linux/32/ectoken3
-	file ECTokenAuthBinaries/Linux/32/ectoken3
-	cp ./c-ectoken/ecencrypt/64/ectoken3 TokenGenerator/Linux/64/ectoken3
-	file ECTokenAuthBinaries/Linux/64/ectoken3
+	cp ./c-ectoken/ecencrypt/ectoken3 TokenGenerator/Linux/ectoken3
+	file ECTokenAuthBinaries/Linux/ectoken3
 	#cp c#-ectoken/ecencryptdotnet/bin/Release/ectoken3.exe TokenGenerator/Windows
 	#cp c#-ectoken/ecencryptdotnet/bin/Release/BouncyCastle.Crypto.dll TokenGenerator/Windows
 	@-rm -r source_packages/TokenGenerator.zip
