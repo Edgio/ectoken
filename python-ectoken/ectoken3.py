@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # /**
 # * Copyright (C) 2016 Verizon. All Rights Reserved.
@@ -20,11 +20,7 @@
 # References:
 # 1. Using cryptography for aes-gcm:
 #    https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/#cryptography.hazmat.primitives.ciphers.modes.GCM
-# 2. OpenSSL rand:
-#    http://pythonhosted.org//pyOpenSSL/api/rand.html
-# 3. hashlib:
-#    https://docs.python.org/2/library/hashlib.html
-# 4. Using cryptography for hashes (not using this currently)
+# 2. Using cryptography for hashes
 #    https://cryptography.io/en/latest/hazmat/primitives/cryptographic-hashes/
 # ------------------------------------------------------------------------------
 
@@ -34,17 +30,16 @@
 # ------------------------------------------------------------------------------
 import argparse
 import base64
+import os
 import sys
-import random
 import time
 import re
 from struct import pack
-import hashlib
 
 import OpenSSL
 
 from cryptography.hazmat.backends import default_backend
-#from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 
 # ------------------------------------------------------------------------------
@@ -80,7 +75,9 @@ def url_safe_base64_decode(a_str):
 def decrypt_v3(a_key, a_token, a_verbose = False):
 
     # Get sha-256 of key
-    l_key = hashlib.sha256(a_key).hexdigest().decode('hex')
+    l_digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
+    l_digest.update(a_key)
+    l_key = l_digest.finalize()
 
     # Base 64 decode
     #l_decoded_token = base64.urlsafe_b64decode(a_token)
@@ -127,13 +124,13 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
 def encrypt_v3(a_key, a_token, a_verbose = False):
 
     # Get sha-256 of key
-    l_key = hashlib.sha256(a_key).hexdigest().decode('hex')
+    l_digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
+    l_digest.update(a_key)
+    l_key = l_digest.finalize()
 
-    # Seed rand with time...
-    OpenSSL.rand.seed(str(time.time()))
 
     # Generate iv
-    l_iv = OpenSSL.rand.bytes(G_IV_SIZE_BYTES) # TODO Make constant...
+    l_iv = os.urandom(G_IV_SIZE_BYTES) # TODO Make constant...
 
     # Construct an AES-GCM Cipher object with the given key and a
     # randomly generated IV.
