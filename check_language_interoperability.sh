@@ -37,13 +37,15 @@
 #   80be25cb0b9728d50e2e106719791d0ef5a12b5904067720df
 #   $ java ECToken  decrypt "yourkey" "80be25cb0b9728d50e2e106719791d0ef5a12b5904067720df"
 #   yourmessage
+# C# example
+#   $ ectoken3.exe yourkey yourmessage
+#   j9BqQe6wgAqclv2MBp028lC0en_HIwTNcnSDAylVFNgJISFHtKQX
+#   $ ectoken3.exe decrypt yourkey j9BqQe6wgAqclv2MBp028lC0en_HIwTNcnSDAylVFNgJISFHtKQX
+#   yourmessage
+
 
 NUM_FAIL=0
 UTILITY_NAME_VER="3"
-
-if [ "${VERBOSE}" == "1" ]; then
-    set -o xtrace
-fi
 
 check_v3_token() {
 
@@ -52,12 +54,11 @@ check_v3_token() {
     local key="$1"
     local test_val="$2"
 
-    #local c32_token="$(./c-ectoken/ecencrypt/32/ectoken${UTILITY_NAME_VER} "${key}" "${test_val}")"
-    local c64_token="$(./c-ectoken/ecencrypt/64/ectoken${UTILITY_NAME_VER} "${key}" "${test_val}")"
-    local py_token="$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --token "${test_val}")"
+    local c_token="$(./c-ectoken/ecencrypt/ectoken${UTILITY_NAME_VER} "${key}" "${test_val}")"
+    local py_token="$(./python_ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --token "${test_val}")"
 
-    if [[ "$(./c-ectoken/ecencrypt/64/ectoken${UTILITY_NAME_VER} decrypt "${key}" "${c64_token}")" -ne \
-          "$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --decrypt --token "${py_token}")" ]]
+    if [[ "$(./c-ectoken/ecencrypt/ectoken${UTILITY_NAME_VER} decrypt "${key}" "${c_token}")" -ne \
+          "$(./python_ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --decrypt --token "${py_token}")" ]]
     then
         echo "Failure"
         exit 1
@@ -73,9 +74,8 @@ check_v3_token() {
 
     echo "Starting v3 token checks keylen ${KEYLEN} ------------------------------"
 
-    C32_TOK="$(./c-ectoken/ecencrypt/32/ectoken${UTILITY_NAME_VER} "${KEY}" "${TEST_VAL}")"
     #sleep 1
-    C64_TOK="$(./c-ectoken/ecencrypt/64/ectoken${UTILITY_NAME_VER} "${KEY}" "${TEST_VAL}")"
+    C_TOK="$(./c-ectoken/ecencrypt/ectoken${UTILITY_NAME_VER} "${KEY}" "${TEST_VAL}")"
     #sleep 1
     CPP_TOK="$(./c++-ectoken/ectoken${UTILITY_NAME_VER} -e "${KEY}" "${TEST_VAL}")"
     #sleep 1
@@ -85,7 +85,9 @@ check_v3_token() {
     #sleep 1
     JAVA_TOK="$(java -jar java-ectoken/ECToken${UTILITY_NAME_VER}.jar encrypt "${KEY}" "${TEST_VAL}")"
     #sleep 1
-    PY_TOK="$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${KEY}" --token "${TEST_VAL}")"
+    PY_TOK="$(./python_ectoken/ectoken${UTILITY_NAME_VER}.py --key "${KEY}" --token "${TEST_VAL}")"
+    #sleep 1
+    CS_TOK="$(./c#-ectoken/ecencryptdotnet/bin/Debug/ectoken${UTILITY_NAME_VER}.exe "${KEY}" "${TEST_VAL}")"
 
     set +o errexit
 
@@ -94,16 +96,9 @@ check_v3_token() {
         NAME="v3 token $2"
         local FAILED=0
 
-        C32_DECRYPT="$(./c-ectoken/ecencrypt/32/ectoken${UTILITY_NAME_VER} decrypt "${KEY}" ${1})"
-        echo "${C32_DECRYPT}" | fgrep "${TEST_VAL}" &>/dev/null || {
-            echo "FAILURE:  32-bit C decryption check failed for ${NAME}.  Missing original value: ${C32_DECRYPT}"
-            let "NUM_FAIL = NUM_FAIL + 1"
-            FAILED=1
-        }
-
-        C64_DECRYPT="$(./c-ectoken/ecencrypt/64/ectoken${UTILITY_NAME_VER} decrypt "${KEY}" ${1})"
-        echo "${C64_DECRYPT}" | fgrep "${TEST_VAL}" &>/dev/null || {
-            echo "FAILURE:  64-bit C decryption check failed for ${NAME}.  Missing original value: ${C64_DECRYPT}"
+        C_DECRYPT="$(./c-ectoken/ecencrypt/ectoken${UTILITY_NAME_VER} decrypt "${KEY}" ${1})"
+        echo "${C_DECRYPT}" | fgrep "${TEST_VAL}" &>/dev/null || {
+            echo "FAILURE:  C decryption check failed for ${NAME}.  Missing original value: ${C_DECRYPT}"
             let "NUM_FAIL = NUM_FAIL + 1"
             FAILED=1
         }
@@ -122,9 +117,16 @@ check_v3_token() {
             FAILED=1
         }
 
-        PY_DECRYPT="$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --decrypt --key "${KEY}" --token "${1}")"
+        PY_DECRYPT="$(./python_ectoken/ectoken${UTILITY_NAME_VER}.py --decrypt --key "${KEY}" --token "${1}")"
         echo "${PY_DECRYPT}" | fgrep "${TEST_VAL}" &>/dev/null || {
             echo "FAILURE:  Python decryption check failed for ${NAME}.  Missing original value: ${PY_DECRYPT}"
+            let "NUM_FAIL = NUM_FAIL + 1"
+            FAILED=1
+        }
+
+        CS_DECRYPT="$(./c#-ectoken/ecencryptdotnet/bin/Debug/ectoken${UTILITY_NAME_VER}.exe  decrypt "${KEY}" "${1}")"
+        echo "${CS_DECRYPT}" | fgrep "${TEST_VAL}" &>/dev/null || {
+            echo "FAILURE:  Python decryption check failed for ${NAME}.  Missing original value: ${CS_DECRYPT}"
             let "NUM_FAIL = NUM_FAIL + 1"
             FAILED=1
         }
@@ -133,30 +135,38 @@ check_v3_token() {
             return 1
         fi
 
-        echo "SUCCESS:  C, C++, Java and Python correctly decrypt ${NAME}"
+        echo "SUCCESS:  C, C++, Java, Python and C# correctly decrypt ${NAME}"
     }
 
-    is_valid "${C32_TOK}" "32-bit C, key length: ${KEYLEN}"
-    is_valid "${C64_TOK}" "64-bit C, key length: ${KEYLEN}"
+    is_valid "${C_TOK}" "C, key length: ${KEYLEN}"
     is_valid "${CPP_TOK}" "C++, key length: ${KEYLEN}"
     is_valid "${PHP_TOK}" "PHP, key length: ${KEYLEN}"
     is_valid "${PERL_TOK}" "PERL, key length: ${KEYLEN}"
     is_valid "${JAVA_TOK}" "JAVA, key length: ${KEYLEN}"
     is_valid "${PY_TOK}" "Python, key length: ${KEYLEN}"
+    is_valid "${CS_TOK}" "C#, key length: ${KEYLEN}"
 
     echo "Done v3 token checks keylen ${KEYLEN} ----------------------------------"
 
 }
 
-check_v3_token "key" "plaintext"
-check_v3_token "a" "aaaaaa" # seems to be a bug with decryption for plaintexts shorter than this?
-check_v3_token "ec5645a1c604066dbee0d8aba93a23b2bdc471c978ba91232c9380ec67a38590ad856b9b3e432e3b5d033eb52a503a75d458feea7a10278cb392c529ba0929f52a5dde32abec752d5a031fd18778783aaed4123605a93a35c6fe40f1e72a90d9ff00fbf0705ec1e08ee328a2e1521758f4b01d4feaafe0c5125436c8002184ebd51d89a657ec0cda6658f7428009653d3ae4014c4c6974fd7fbf525332f5a49c0fd84aa41909f0c4404abfbf0701af1d5f495810288b57d7b509b6e2fb6e14026c98359250581aace9427e45fee97651bd8b9f3369a53ba5fb1a3370edffdb370e5b656cf87e96ecbb8116112a203a1490eed508118fe2d1949727efa548dabf256" "plaintext"
+main() {
+    if [ "${VERBOSE}" == "1" ]; then
+        set -o xtrace
+    fi
 
-if [[ "${NUM_FAIL}" != "0" ]]; then
-    echo
-    echo "----------------------------------"
-    echo "Number of failed tests: ${NUM_FAIL}"
-    echo "----------------------------------"
-    echo
-    exit 1
-fi
+    check_v3_token "key" "plaintext"
+    check_v3_token "a" "aaaaaa" # seems to be a bug with decryption for plaintexts shorter than this?
+    check_v3_token "ec5645a1c604066dbee0d8aba93a23b2bdc471c978ba91232c9380ec67a38590ad856b9b3e432e3b5d033eb52a503a75d458feea7a10278cb392c529ba0929f52a5dde32abec752d5a031fd18778783aaed4123605a93a35c6fe40f1e72a90d9ff00fbf0705ec1e08ee328a2e1521758f4b01d4feaafe0c5125436c8002184ebd51d89a657ec0cda6658f7428009653d3ae4014c4c6974fd7fbf525332f5a49c0fd84aa41909f0c4404abfbf0701af1d5f495810288b57d7b509b6e2fb6e14026c98359250581aace9427e45fee97651bd8b9f3369a53ba5fb1a3370edffdb370e5b656cf87e96ecbb8116112a203a1490eed508118fe2d1949727efa548dabf256" "plaintext"
+
+    if [[ "${NUM_FAIL}" != "0" ]]; then
+        echo
+        echo "----------------------------------"
+        echo "Number of failed tests: ${NUM_FAIL}"
+        echo "----------------------------------"
+        echo
+        exit 1
+    fi
+}
+
+main $@

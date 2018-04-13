@@ -13,9 +13,9 @@
 # * limitations under the License.
 # */
 
-.PHONY: all check install install-source c-ectoken cpp-ectoken java-ectoken php-ectoken python-ectoken
+.PHONY: all check install install-source c-ectoken cpp-ectoken java-ectoken php-ectoken python_ectoken c-sharp-ectoken
 
-all: c-ectoken cpp-ectoken java-ectoken php-ectoken python-ectoken
+all: c-ectoken cpp-ectoken java-ectoken php-ectoken python_ectoken c-sharp-ectoken
 
 c-ectoken:
 	$(MAKE) -C c-ectoken/ecencrypt
@@ -29,9 +29,11 @@ java-ectoken:
 php-ectoken:
 	cd php-ectoken && ./build.sh
 
-python-ectoken:
-	export
-	$(MAKE) -C python-ectoken
+python_ectoken:
+	$(MAKE) -C python_ectoken
+
+c-sharp-ectoken:
+	cd 'c#-ectoken/ecencryptdotnet' && msbuild
 
 check: all
     # run as many language-to-language checks as we have binaries for
@@ -69,7 +71,7 @@ install-source:
 	zip -r source_packages/perl-ecencrypt.zip perl-ecencrypt -i perl-ecencrypt/ectoken3.pl
 	@rm -rf perl-ecencrypt
 	@rm -rf python-ecencrypt
-	@cp -r python-ectoken python-ecencrypt
+	@cp -r python_ectoken python-ecencrypt
 	@-rm source_packages/python-ecencrypt.zip
 	zip -r source_packages/python-ecencrypt.zip python-ecencrypt -i python-ecencrypt/*.py -i python-ecencrypt/requirements.txt -i python-ecencrypt/deps.sh
 	@rm -rf python-ecencrypt

@@ -283,6 +283,7 @@ php-ectoken/mkinstalldirs
 java-ectoken/ECToken3.class
 java-ectoken/ECToken3.jar
 php-ectoken/run-tests.php
+c#-ectoken/External/
 
 ## Autotools garbage
 ### http://www.gnu.org/software/automake

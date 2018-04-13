@@ -78,13 +78,13 @@
     <ManifestKeyFile>ec_encrypt_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto">
+    <Reference Include="Org.BouncyCastle.Crypto">
       <HintPath>..\External\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="System" />

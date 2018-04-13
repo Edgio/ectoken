@@ -30,6 +30,7 @@
 # ------------------------------------------------------------------------------
 import argparse
 import base64
+import copy
 import os
 import sys
 import time
@@ -46,8 +47,6 @@ from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 # Constants
 # ------------------------------------------------------------------------------
 G_ALPHANUMERIC = '-_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxzy'
-G_RAND_SENTINEL_MIN_LEN = 4
-G_RAND_SENTINEL_MAX_LEN = 8
 G_IV_SIZE_BYTES = 12
 G_AES_GCM_TAG_SIZE_BYTES = 16
 
@@ -63,7 +62,7 @@ def url_safe_base64_encode(a_str):
 # ------------------------------------------------------------------------------
 def url_safe_base64_decode(a_str):
     # If string % 4 -add back '='
-    l_str = a_str
+    l_str = copy.copy(a_str)
     l_mod = len(a_str) % 4
     if l_mod:
         l_str += '=' * (4 - l_mod)
@@ -121,7 +120,7 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
 # ------------------------------------------------------------------------------
 #
 # ------------------------------------------------------------------------------
-def encrypt_v3(a_key, a_token, a_verbose = False):
+def encrypt_v3(a_key, a_token, a_verbose = False, a_iv_override = None):
 
     # Get sha-256 of key
     l_digest = hashes.Hash(hashes.SHA256(), backend=default_backend())
@@ -131,6 +130,10 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
 
     # Generate iv
     l_iv = os.urandom(G_IV_SIZE_BYTES) # TODO Make constant...
+    # WARNING: Only use this for testing!
+    if a_iv_override is not None:
+        print("WARNING: using a testing parameter that will break the security of your key!")
+        l_iv = a_iv_override
 
     # Construct an AES-GCM Cipher object with the given key and a
     # randomly generated IV.
