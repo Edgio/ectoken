@@ -46,7 +46,7 @@ sub encrypt_v3
     #---------------------------------------------
     # Seed rand/generate iv
     #---------------------------------------------
-    my $l_rand_source = new Crypt::Random::Seed;
+    my $l_rand_source = Crypt::Random::Seed->new(NonBlocking => 1);
     my $l_ivbytes = $l_rand_source->random_bytes(12);
 
     #---------------------------------------------

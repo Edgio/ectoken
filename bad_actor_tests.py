@@ -61,7 +61,7 @@ def validate_token_fails(a_key, a_token, a_canonical):
     l_exes = [
         "./c-ectoken/ecencrypt/ectoken3 decrypt '{}' '{}'",
         "./c++-ectoken/ectoken3 -d '{}' '{}'",
-        #"./perl-ectoken/ectoken3.pl '{}' '{}'",
+        "./perl-ectoken/ectoken3.pl '{}' '{}'",
         "java -jar java-ectoken/ECToken3.jar decrypt '{}' '{}'",
         "./c#-ectoken/ecencryptdotnet/bin/Debug/ectoken3.exe decrypt '{}' '{}'",
     ]
