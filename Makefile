@@ -27,7 +27,7 @@ java-ectoken:
 	$(MAKE) -C java-ectoken
 
 php-ectoken:
-	cd php-ectoken && ./build.sh
+	cd php-ectoken && ./build.sh && find . -name "ectoken3.exe" -exec chmod +x {} +
 
 python_ectoken:
 	$(MAKE) -C python_ectoken
