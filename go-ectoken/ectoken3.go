@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -20,7 +21,8 @@ func init() {
  * can not be decrypted, returns an empty string and a non-nil error.
  */
 func DecryptV3(key, token string) (string, error) {
-	enc, err := base64.URLEncoding.DecodeString(token)
+	token = strings.TrimRight(token, "=")
+	enc, err := base64.RawURLEncoding.DecodeString(token)
 	if err != nil {
 		return "", err
 	}
@@ -47,7 +49,7 @@ func EncryptV3(key, token string) string {
 	gcm, _ := cipher.NewGCM(block)
 	iv := make([]byte, gcm.NonceSize())
 	rand.Read(iv)
-	return base64.URLEncoding.EncodeToString(
+	return base64.RawURLEncoding.EncodeToString(
 		gcm.Seal(iv, iv, []byte(token), nil),
 	)
 }
