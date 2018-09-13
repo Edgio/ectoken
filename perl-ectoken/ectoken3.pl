@@ -35,7 +35,6 @@ GetOptions(
 	"V|version"	=> sub { version(); },
 );
 
-);
 #: -----------------------------------------------------------------------------
 #: ec_encrypt
 #: -----------------------------------------------------------------------------
@@ -70,7 +69,7 @@ sub encrypt_v3 {
 # URL Safe Base64 encode and return
 #---------------------------------------------
 
-	return urlsafe_b64encode("$l_ivbytes$l_ciphertext$ltag");
+	return urlsafe_b64encode("$l_ivbytes$l_ciphertext$l_tag");
 }
 
 sub usage {
