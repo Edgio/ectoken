@@ -83,6 +83,8 @@ check_v3_token() {
     #sleep 1
     PHP_TOK="$(php -d extension=php-ectoken/.libs/ectoken.so -r "\$token = ectoken_encrypt_token('"${KEY}"', '${TEST_VAL}'); echo \$token;")"
     #sleep 1
+    PHPN_TOK="$(php -r "include('php-native-ectoken/ectoken3.php'); echo \\ECToken3\\ECToken3::encrypt('${KEY}', '${TEST_VAL}');")"
+    #sleep 1
     JAVA_TOK="$(java -jar java-ectoken/ECToken${UTILITY_NAME_VER}.jar encrypt "${KEY}" "${TEST_VAL}")"
     #sleep 1
     PY_TOK="$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${KEY}" --token "${TEST_VAL}")"
@@ -140,6 +142,7 @@ check_v3_token() {
     is_valid "${C64_TOK}" "64-bit C, key length: ${KEYLEN}"
     is_valid "${CPP_TOK}" "C++, key length: ${KEYLEN}"
     is_valid "${PHP_TOK}" "PHP, key length: ${KEYLEN}"
+    is_valid "${PHPN_TOK}" "PHP Native, key length: ${KEYLEN}"
     is_valid "${PERL_TOK}" "PERL, key length: ${KEYLEN}"
     is_valid "${JAVA_TOK}" "JAVA, key length: ${KEYLEN}"
     is_valid "${PY_TOK}" "Python, key length: ${KEYLEN}"
