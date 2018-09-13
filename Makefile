@@ -19,6 +19,7 @@ all:
 	$(MAKE) -C c-ectoken/ecencrypt
 	$(MAKE) -C c++-ectoken
 	cd php-ectoken && ./build.sh
+	composer install -d php-native-ectoken
 	$(MAKE) -C java-ectoken
 	$(MAKE) -C python-ectoken
 
