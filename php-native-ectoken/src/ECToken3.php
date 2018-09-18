@@ -17,8 +17,8 @@ abstract class ECToken3 {
     // Check that generated token will not exceed max length.
     $result_bits_length = (self::TAG_SIZE_BITS / 8) + self::IV_SIZE_BYTES + strlen($input);
     
-    // Note: base64 encoding the output inflates it by a factor of 4/3
-    if (ceil($result_bits_length * 4 / 3) > self::TOKEN_MAX_LENGTH) {
+    // Note: base64 encoding the output inflates it by a factor of 1/3
+    if ($result_bits_length > self::TOKEN_MAX_LENGTH * 0.75) {
       throw new \LengthException('Generated token exceeds maximumum length of ' . self::TOKEN_MAX_LENGTH . ' characters');
     }
 
