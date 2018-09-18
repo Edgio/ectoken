@@ -11,8 +11,17 @@ abstract class ECToken3 {
 
   protected const IV_SIZE_BYTES = 12;
   protected const TAG_SIZE_BITS = 128; // 16 bytes
+  protected const TOKEN_MAX_LENGTH = 512;
 
   public function encrypt($key, $input) {
+    // Check that generated token will not exceed max length.
+    $result_bits_length = (self::TAG_SIZE_BITS / 8) + self::IV_SIZE_BYTES + strlen($input);
+    
+    // Note: base64 encoding the output inflates it by a factor of 4/3
+    if (ceil($result_bits_length * 4 / 3) > self::TOKEN_MAX_LENGTH) {
+      throw new \LengthException('Generated token exceeds maximumum length of ' . self::TOKEN_MAX_LENGTH . ' characters');
+    }
+
     // Get sha-256 hash of key as bytes
     $key_digest = hash('sha256', $key, true);
 
