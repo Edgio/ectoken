@@ -5,7 +5,7 @@ namespace ECToken3;
 use \AESGCM\AESGCM;
 use \ParagonIE\ConstantTime\RFC4648;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 abstract class ECToken3 {
 
