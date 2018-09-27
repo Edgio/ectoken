@@ -7,7 +7,7 @@ use \ParagonIE\ConstantTime\RFC4648;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-class ECTokenCrypto implements ECTokenCryptoInterface {
+class Crypto implements CryptoInterface {
 
   const IV_SIZE_BYTES = 12;
   const TAG_SIZE_BITS = 128; // 16 bytes

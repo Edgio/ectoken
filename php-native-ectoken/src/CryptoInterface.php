@@ -2,7 +2,7 @@
 
 namespace ECToken3;
 
-interface ECTokenCryptoInterface {
+interface CryptoInterface {
 
   public function encrypt($input);
   public function decrypt($input);

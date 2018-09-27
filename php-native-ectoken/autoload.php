@@ -12,17 +12,10 @@
  * 
  */
 
-spl_autoload_register(function($className) {
-  if (class_exists($className, false) || interface_exists($className, false)) {
-    return false;
-  }
+require __DIR__ . '/vendor/autoload.php';
 
-  $classFile = dirname(__FILE__) . '/src/'. preg_replace('/^.*\\\/', '', $className) . '.php';
-  
-  if (file_exists($classFile)) {
-    require($classFile);
-    return true;
-  }
+$loader = new \Aura\Autoload\Loader();
+$loader->register();
 
-  return false;
-});
+$loader->addPrefix('ECToken3', __DIR__ . '/src');
+$loader->addPrefix('ECToken3\Rules', __DIR__ . '/src/rules');
