@@ -4,6 +4,7 @@
     "type": "library",
     "license": "http://www.apache.org/licenses/LICENSE-2.0",
     "require": {
+        "aura/autoload": "^2.0",
         "spomky-labs/php-aes-gcm": "^1.2",
         "paragonie/random_compat": ">=2",
         "paragonie/constant_time_encoding": "^1|^2",
@@ -17,7 +18,6 @@
         }
     },
     "require-dev": {
-        "aura/autoload": "^2.0",
         "phpcompatibility/php-compatibility": "^8.2",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4"
     }

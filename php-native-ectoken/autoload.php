@@ -18,4 +18,4 @@ $loader = new \Aura\Autoload\Loader();
 $loader->register();
 
 $loader->addPrefix('ECToken3', __DIR__ . '/src');
-$loader->addPrefix('ECToken3\Rules', __DIR__ . '/src/rules');
+$loader->addPrefix('ECToken3\\Rules', __DIR__ . '/src/rules');
