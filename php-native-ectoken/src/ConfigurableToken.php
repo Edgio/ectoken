@@ -36,6 +36,8 @@ class ConfigurableToken implements Token, Encodable {
       $p->addValue($value);
       $this->setParameter($p);
     }
+
+    return $this;
   }
 
   /**
@@ -135,7 +137,7 @@ class ConfigurableToken implements Token, Encodable {
      * Percent encode values for serialization. Candidates for encoding include
      * all URL unsafe characters per RFC 3986 plus ampersand (&), equals (=), 
      * and comma (,), which are all reserved characters in the ectoken 
-     * serialization format (see VDMS  Token-Based Authentication Administration 
+     * serialization format (see VDMS Token-Based Authentication Administration 
      * Guide)
      */
     $result .= preg_replace_callback(

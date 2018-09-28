@@ -97,7 +97,7 @@ class ValidatingParameter implements Parameter {
     }
 
     if (!isset($this->values[$index]) && count($this->values) >= $this->maxSize) {
-      throw new LogicError("Parameter cannot contain more than {$this->maxSize} values");
+      throw new \LogicError("Parameter cannot contain more than {$this->maxSize} values");
     }
 
     $this->validator->assert($value);

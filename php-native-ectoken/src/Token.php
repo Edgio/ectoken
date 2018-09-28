@@ -13,6 +13,7 @@ interface Token extends \ArrayAccess, \Countable {
    * 
    * @param string $name Parameter name to store the value in
    * @param mixed $value
+   * @return Token return the token for chainability
    */
   public function addValue($name, $value);
 
