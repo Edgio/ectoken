@@ -3,7 +3,7 @@
 namespace ECToken3;
 
 use \AESGCM\AESGCM;
-use \ParagonIE\ConstantTime\RFC4648;
+use \ParagonIE\ConstantTime\Base64UrlSafe;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -37,13 +37,13 @@ class Crypto implements CryptoInterface {
     // Prepend initialization vector
     $result_bits = $iv . $ciphertext;
 
-    // Encode as a URL-safe base64 string, trim padding, and return
-    return rtrim(RFC4648::base64UrlSafeEncode($result_bits), '=');
+    // Encode as a URL-safe base64 string without padding
+    return Base64UrlSafe::encodeUnpadded($result_bits);
   }
 
   public function decrypt($input) {
     // Decode URL-safe base64 encoded input
-    $input_bits = RFC4648::base64UrlSafeDecode($input);
+    $input_bits = Base64UrlSafe::decode($input);
 
     // Extract initialization vector
     $iv = mb_substr($input_bits, 0, self::IV_SIZE_BYTES, '8bit');
