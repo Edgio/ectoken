@@ -7,7 +7,7 @@ use \ParagonIE\ConstantTime\Base64UrlSafe;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-class Crypto implements CryptoInterface {
+class Crypto {
 
   const IV_SIZE_BYTES = 12;
   const TAG_SIZE_BITS = 128; // 16 bytes
