@@ -13,7 +13,7 @@ class ECTokenParameterFactory implements ParameterFactory {
     
     $this->def = [
       'ec_clientip' => [
-        'validator' => v::scalarVal()->ip(),
+        'validator' => v::scalarVal()->IPv46CIDR(),
         'maxSize' => 1,
       ],
       'ec_country_allow' => [

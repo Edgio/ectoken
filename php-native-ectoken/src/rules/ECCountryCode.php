@@ -4,6 +4,9 @@ namespace ECToken3\Rules;
 
 use Respect\Validation\Rules\AbstractRule;
 
+/**
+ * Validate against Verizon ECToken valid country code list
+ */
 class ECCountryCode extends AbstractRule {
 
   const COUNTRY_CODES = array(
