@@ -83,7 +83,7 @@ check_v3_token() {
     #sleep 1
     PHP_TOK="$(php -d extension=php-ectoken/.libs/ectoken.so -r "\$token = ectoken_encrypt_token('"${KEY}"', '${TEST_VAL}'); echo \$token;")"
     #sleep 1
-    PHPN_TOK="$(php -r "include('php-native-ectoken/ectoken3.php'); echo \\ECToken3\\ECToken3::encrypt('${KEY}', '${TEST_VAL}');")"
+    PHPN_TOK="$(php -r "include('php-native-ectoken/autoload.php'); echo (new ECToken3\\Crypto('${KEY}'))->encrypt('${TEST_VAL}');")"
     #sleep 1
     JAVA_TOK="$(java -jar java-ectoken/ECToken${UTILITY_NAME_VER}.jar encrypt "${KEY}" "${TEST_VAL}")"
     #sleep 1

@@ -261,4 +261,5 @@ __pycache__/
 *.pyc
 
 # PHP Composer deps
-php**/vendor/
+php*/vendor/
+php*/composer.lock

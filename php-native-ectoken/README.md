@@ -4,10 +4,13 @@ This is a native PHP implementation of the EdgeCast Token Generator that does
 not require a PHP extension to operate, making it suitable for environments in
 which PHP extensions are not available.
 
+Additional ECToken parameter management has been included in order to assist
+users of this library to construct parameter strings for encrypting.
+
 ## Requirements
 
 Efforts have been made to ensure that this code will operate properly on PHP 
-5.6+ or PHP 7, with or without the mbstring or openssl modules.
+5.6+ or PHP 7+, with or without mbstring or openssl support.
 
 - Composer (<https://getcomposer.org>) is required for dependency management
 
@@ -109,3 +112,4 @@ These libraries are used directly:
 - random_compat: PHP 5.x polyfill for `random_bytes()` and `random_int()` <https://github.com/paragonie/random_compat>
 - constant_time_encoding: Constant-Time Character Encoding in PHP Projects <https://github.com/paragonie/constant_time_encoding>
 - polyfill-mbstring: Symfony Polyfill / Mbstring <https://github.com/symfony/polyfill>
+- Respect\Validation: Validation library <https://github.com/Respect/Validation>
