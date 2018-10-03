@@ -1,0 +1,24 @@
+{
+    "name": "verizon-digital/php-ectoken",
+    "description": "EdgeCast Token Generator for PHP",
+    "type": "library",
+    "license": "http://www.apache.org/licenses/LICENSE-2.0",
+    "require": {
+        "aura/autoload": "^2.0",
+        "spomky-labs/php-aes-gcm": "^1.2",
+        "paragonie/random_compat": ">=2",
+        "paragonie/constant_time_encoding": "^1|^2",
+        "symfony/polyfill-mbstring": "^1.9",
+        "respect/validation": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "ECToken3\\": "src/",
+            "ECToken3\\Rules\\": "src/rules/"
+        }
+    },
+    "require-dev": {
+        "phpcompatibility/php-compatibility": "^8.2",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4"
+    }
+}
