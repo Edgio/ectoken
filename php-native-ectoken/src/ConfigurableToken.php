@@ -141,7 +141,7 @@ class ConfigurableToken implements Token, Encodable {
      * Guide)
      */
     $result .= preg_replace_callback(
-      '/[^A-Za-z0-9,._~!$\'()*+;:@\/]/u',
+      '/[^A-Za-z0-9,._~!$\'()*+;:@\/\-]/u',
       function($matches) { 
         // Correctly percent encodes multi-byte characters
         return '%' . implode('', array_map('dechex', array_map('ord', str_split($matches[0])))); 
