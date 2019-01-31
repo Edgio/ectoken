@@ -1,0 +1,9 @@
+[package]
+name = "ectoken"
+version = "0.1.0"
+authors = ["Benoît Burnichon <bburnichon@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+base64 = "^0.10"
+rust-crypto = "^0.2"
