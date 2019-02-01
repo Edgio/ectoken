@@ -1,38 +1,92 @@
 extern crate base64;
 extern crate crypto;
 
-use crypto::aead::{AeadEncryptor,AeadDecryptor};
+use crypto::aead::AeadDecryptor;
 use crypto::aes;
 use crypto::aes_gcm::AesGcm;
 use crypto::digest::Digest;
 use crypto::sha2::Sha256;
-use std::error::Error;
+use std::error;
+use std::fmt;
 
 pub fn init() {
 }
 
 pub fn encrypt_v3(_key: &str, _token: &str) -> String {
-    let s = String::new();
-
-    s
+    String::new()
 }
 
-pub fn decrypt_v3(key: &str, token: &str) -> Result<String, Box<dyn Error>> {
-    let chars = base64::decode_config(token, base64::URL_SAFE_NO_PAD)?;
-
+fn key_hash(key: &str) -> Vec<u8> {
     let mut hasher = Sha256::new();
+
     hasher.input_str(key);
+
     let mut key_hash = Vec::new();
     hasher.result(&mut key_hash);
 
-    let mut crypto = AesGcm::new(aes::KeySize::KeySize256, &key_hash, &chars[..16], &vec![]);
+    key_hash
+}
 
+pub fn decrypt_v3(key: &str, token: &str) -> Result<String, DecryptionError> {
+    let chars = base64::decode_config(token, base64::URL_SAFE_NO_PAD)?;
+
+    let mut crypto = AesGcm::new(aes::KeySize::KeySize256, &key_hash(key), &chars[..16], &[]);
     let mut output = Vec::new();
-    crypto.decrypt(&chars[16..], &mut output, &vec![]);
-
+    crypto.decrypt(&chars[16..], &mut output, &[]);
     let s = String::from_utf8(output)?;
 
     Ok(s)
+}
+
+/// Errors that can occur while decoding.
+#[derive(Debug)]
+pub enum DecryptionError {
+    /// An invalid base64 string was found in the input.
+    InvalidBase64(base64::DecodeError),
+    /// An invalid UTF8 string was found once decrypted.
+    InvalidUTF8(std::string::FromUtf8Error),
+    /// An invalid input/output was
+    IOError(&'static str),
+}
+
+impl fmt::Display for DecryptionError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            DecryptionError::InvalidBase64(_) => write!(f, "Invalid base64."),
+            DecryptionError::InvalidUTF8(_) => write!(f, "Invalid UTF8 string decrypted."),
+            DecryptionError::IOError(description) => write!(f, "Input/Output error: {}", description),
+        }
+    }
+}
+
+impl error::Error for DecryptionError {
+    fn description(&self) -> &str {
+        match *self {
+            DecryptionError::InvalidBase64(_) => "invalid base64",
+            DecryptionError::InvalidUTF8(_) => "invalid UTF8 string decrypted",
+            DecryptionError::IOError(_) => "input/output error",
+        }
+    }
+
+    fn cause(&self) -> Option<&error::Error> {
+        match *self {
+            DecryptionError::InvalidBase64(previous) => Some(&previous),
+            DecryptionError::InvalidUTF8(previous) => Some(&previous),
+            _ => None,
+        }
+    }
+}
+
+impl From<base64::DecodeError> for DecryptionError {
+    fn from(err: base64::DecodeError) -> DecryptionError {
+        DecryptionError::InvalidBase64(err)
+    }
+}
+
+impl From<std::string::FromUtf8Error> for DecryptionError {
+    fn from(err: std::string::FromUtf8Error) -> DecryptionError {
+        DecryptionError::InvalidUTF8(err)
+    }
 }
 
 #[cfg(test)]

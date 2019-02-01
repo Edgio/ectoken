@@ -47,13 +47,13 @@ impl Config {
         match args.len() {
             3 => Ok(Config {
                 action: String::from("encrypt"),
-                key: args.get(1).unwrap().clone(),
-                text: args.get(2).unwrap().clone(),
+                key: args[1].clone(),
+                text: args[2].clone(),
             }),
             4 => Ok(Config {
-                action: args.get(1).unwrap().clone(),
-                key: args.get(2).unwrap().clone(),
-                text: args.get(3).unwrap().clone(),
+                action: args[1].clone(),
+                key: args[2].clone(),
+                text: args[3].clone(),
             }),
             _ => Err("Invalid number of arguments"),
         }
