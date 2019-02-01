@@ -30,13 +30,17 @@ fn key_hash(key: &str) -> Vec<u8> {
 pub fn decrypt_v3(key: &str, token: &str) -> Result<String, DecryptionError> {
     let chars = base64::decode_config(token, base64::URL_SAFE_NO_PAD)?;
     
-    if chars.len() < 12 {
+    if chars.len() < 12 + 16 {
         return Err(DecryptionError::IOError("invalid input length"));
     }
 
     let mut crypto = AesGcm::new(aes::KeySize::KeySize256, &key_hash(key), &chars[..12], &[]);
-    let mut output = vec![0u8; chars.len() - 12];
-    crypto.decrypt(&chars[12..], &mut output, &[]);
+    let mut output = vec![0u8; chars.len() - 12 - 16];
+    
+    if ! crypto.decrypt(&chars[12..chars.len() - 16], &mut output, &chars[chars.len() - 16..]) {
+        return Err(DecryptionError::IOError("decryption failed"));
+    }
+
     let s = String::from_utf8(output)?;
 
     Ok(s)
