@@ -29,6 +29,10 @@ fn key_hash(key: &str) -> Vec<u8> {
 
 pub fn decrypt_v3(key: &str, token: &str) -> Result<String, DecryptionError> {
     let chars = base64::decode_config(token, base64::URL_SAFE_NO_PAD)?;
+    
+    if chars.len() < 16 {
+        return Err(DecryptionError::IOError("invalid input length"));
+    }
 
     let mut crypto = AesGcm::new(aes::KeySize::KeySize256, &key_hash(key), &chars[..16], &[]);
     let mut output = Vec::new();
@@ -70,8 +74,8 @@ impl error::Error for DecryptionError {
 
     fn cause(&self) -> Option<&error::Error> {
         match *self {
-            DecryptionError::InvalidBase64(previous) => Some(&previous),
-            DecryptionError::InvalidUTF8(previous) => Some(&previous),
+            DecryptionError::InvalidBase64(ref previous) => Some(previous),
+            DecryptionError::InvalidUTF8(ref previous) => Some(previous),
             _ => None,
         }
     }
@@ -98,6 +102,13 @@ mod tests {
         let decrypted = decrypt_v3("testkey123", "af0c6acf7906cd500aee63a4dd2e97ddcb0142601cf83aa9d622289718c4c85413");
 
         assert!(decrypted.is_err(), "decryption should be an Error with invalid base64 encoded string");
+    }
+
+    #[test]
+    fn it_returns_err_on_invalid_length() {
+        let decrypted = decrypt_v3("testkey123", "bs4W7wyy");
+
+        assert!(decrypted.is_err(), "decryption should be an Error with invalid length encoded string");
     }
 
     #[test]
