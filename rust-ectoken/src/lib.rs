@@ -1,19 +1,39 @@
 extern crate base64;
 extern crate crypto;
 
-use crypto::aead::AeadDecryptor;
+use crypto::aead::{AeadDecryptor, AeadEncryptor};
 use crypto::aes;
 use crypto::aes_gcm::AesGcm;
 use crypto::digest::Digest;
 use crypto::sha2::Sha256;
+use rand::RngCore;
 use std::error;
 use std::fmt;
 
-pub fn init() {
-}
+const NONCE_LEN: u8 = 12;
+const TAG_LEN: u8 = 16;
 
-pub fn encrypt_v3(_key: &str, _token: &str) -> String {
-    String::new()
+pub fn encrypt_v3(key: &str, token: &str) -> String {
+    let key_hash = key_hash(key);
+    let mut nonce = [0u8; NONCE_LEN as usize];
+    
+    let mut generator = rand::thread_rng();
+
+    generator.fill_bytes(&mut nonce);
+
+    let mut crypto = AesGcm::new(aes::KeySize::KeySize256, &key_hash, &nonce, &[]);
+    let mut output = vec![0u8; token.len()];
+    let mut tag = [0u8; TAG_LEN as usize];
+
+    crypto.encrypt(token.as_bytes(), &mut output, &mut tag);
+
+    let mut encrypted = Vec::with_capacity(NONCE_LEN as usize + token.len() + TAG_LEN as usize);
+
+    encrypted.extend_from_slice(&nonce);
+    encrypted.extend_from_slice(&output);
+    encrypted.extend_from_slice(&tag);
+
+    base64::encode_config(&encrypted, base64::URL_SAFE_NO_PAD)
 }
 
 fn key_hash(key: &str) -> Vec<u8> {
@@ -30,14 +50,14 @@ fn key_hash(key: &str) -> Vec<u8> {
 pub fn decrypt_v3(key: &str, token: &str) -> Result<String, DecryptionError> {
     let chars = base64::decode_config(token, base64::URL_SAFE_NO_PAD)?;
     
-    if chars.len() < 12 + 16 {
+    if chars.len() < (NONCE_LEN + TAG_LEN) as usize {
         return Err(DecryptionError::IOError("invalid input length"));
     }
 
-    let mut crypto = AesGcm::new(aes::KeySize::KeySize256, &key_hash(key), &chars[..12], &[]);
-    let mut output = vec![0u8; chars.len() - 12 - 16];
+    let mut crypto = AesGcm::new(aes::KeySize::KeySize256, &key_hash(key), &chars[..NONCE_LEN as usize], &[]);
+    let mut output = vec![0u8; chars.len() - (NONCE_LEN + TAG_LEN) as usize];
     
-    if ! crypto.decrypt(&chars[12..chars.len() - 16], &mut output, &chars[chars.len() - 16..]) {
+    if ! crypto.decrypt(&chars[NONCE_LEN as usize..chars.len() - TAG_LEN as usize], &mut output, &chars[chars.len() - TAG_LEN as usize..]) {
         return Err(DecryptionError::IOError("decryption failed"));
     }
 
@@ -120,5 +140,15 @@ mod tests {
         let decrypted = decrypt_v3("testkey123", "bs4W7wyy0OjyBQMhAaahSVo2sG4gKEzuOegBf9kI-ZzG8Gz4FQuFud2ndvmuXkReeRnKFYXTJ7q5ynniGw").unwrap();
  
         assert_eq!("ec_expire=1257642471&ec_secure=33", decrypted);
+    }
+
+    #[test]
+    fn it_encrypt_and_decrypt_successfully() {
+        let input = "ec_expire=1257642471&ec_secure=33";
+
+        let encrypted = encrypt_v3("testkey123", input);
+        let decrypted = decrypt_v3("testkey123", &encrypted).unwrap();
+
+        assert_eq!(input, decrypted);
     }
 }
