@@ -42,7 +42,8 @@ from struct import pack
 import hashlib
 
 import OpenSSL
-
+import codecs
+import os
 from cryptography.hazmat.backends import default_backend
 #from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
@@ -61,14 +62,19 @@ G_AES_GCM_TAG_SIZE_BYTES = 16
 # ------------------------------------------------------------------------------
 def url_safe_base64_encode(a_str):
     l_str = base64.urlsafe_b64encode(a_str)
-    return l_str.replace('=', '')
+    return l_str
+    # import pdb;pdb.set_trace()
+    # print("original l_str: ", l_str)
+    something = l_str.encode('utf-8')
+    return something.replace('=', '')
 
 # ------------------------------------------------------------------------------
 #
 # ------------------------------------------------------------------------------
 def url_safe_base64_decode(a_str):
+    import pdb;pdb.set_trace()
     # If string % 4 -add back '='
-    l_str = a_str
+    l_str = a_str.decode('utf-8')
     l_mod = len(a_str) % 4
     if l_mod:
         l_str += '=' * (4 - l_mod)
@@ -78,9 +84,13 @@ def url_safe_base64_decode(a_str):
 #
 # ------------------------------------------------------------------------------
 def decrypt_v3(a_key, a_token, a_verbose = False):
-
+    import pdb;pdb.set_trace()
     # Get sha-256 of key
-    l_key = hashlib.sha256(a_key).hexdigest().decode('hex')
+    a_key = a_key.encode('utf-8')
+    a_token = a_token.encode('utf-8')
+    
+    l_key = hashlib.sha256(a_key).hexdigest()#.decode('hex')
+    l_key = codecs.decode(l_key, 'hex')
 
     # Base 64 decode
     #l_decoded_token = base64.urlsafe_b64decode(a_token)
@@ -127,14 +137,22 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
 def encrypt_v3(a_key, a_token, a_verbose = False):
 
     # Get sha-256 of key
-    l_key = hashlib.sha256(a_key).hexdigest().decode('hex')
+    import pdb;pdb.set_trace()
+    a_key = a_key.encode('utf-8')
+    a_token = a_token.encode('utf-8')
+    
+    l_key = hashlib.sha256(a_key).hexdigest()#.decode('hex')
+    l_key = codecs.decode(l_key, 'hex') # python 3 does not support .decode('hex')
+    # import pdb;pdb.set_trace()
 
     # Seed rand with time...
-    OpenSSL.rand.seed(str(time.time()))
+    # OpenSSL.rand.seed(str(time.time()))
 
     # Generate iv
-    l_iv = OpenSSL.rand.bytes(G_IV_SIZE_BYTES) # TODO Make constant...
-
+    # l_iv = OpenSSL.rand.bytes(G_IV_SIZE_BYTES) # TODO Make constant...
+    l_iv = os.urandom(G_IV_SIZE_BYTES) # TODO Make constant...
+    import pdb;pdb.set_trace()
+    
     # Construct an AES-GCM Cipher object with the given key and a
     # randomly generated IV.
     l_encryptor = Cipher(
@@ -147,6 +165,8 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
     # GCM does not require padding.
     l_ciphertext = l_encryptor.update(a_token) + l_encryptor.finalize()
 
+
+    
     l_iv_ciphertext = l_iv + l_ciphertext + l_encryptor.tag
 
     #print 'TAG (len:%d) : %s'%(len(l_encryptor.tag), l_encryptor.tag)
