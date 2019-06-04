@@ -88,7 +88,7 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
     a_key = a_key.encode('utf-8')
     a_token = a_token.encode('utf-8')
 
-    l_key = hashlib.sha256(a_key).hexdigest()#.decode('hex')
+    l_key = hashlib.sha256(a_key).hexdigest()
     l_key = codecs.decode(l_key, 'hex')
 
     # Base 64 decode
@@ -138,8 +138,8 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
     a_key = a_key.encode('utf-8')
     a_token = a_token.encode('utf-8')
 
-    l_key = hashlib.sha256(a_key).hexdigest()#.decode('hex')
-    l_key = codecs.decode(l_key, 'hex') # python 3 does not support .decode('hex')
+    l_key = hashlib.sha256(a_key).hexdigest()
+    l_key = codecs.decode(l_key, 'hex')
 
     # Generate iv
     # l_iv = OpenSSL.rand.bytes(G_IV_SIZE_BYTES) # TODO Make constant...
