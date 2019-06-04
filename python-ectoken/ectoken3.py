@@ -20,11 +20,9 @@
 # References:
 # 1. Using cryptography for aes-gcm:
 #    https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/#cryptography.hazmat.primitives.ciphers.modes.GCM
-# 2. OpenSSL rand:
-#    http://pythonhosted.org//pyOpenSSL/api/rand.html
-# 3. hashlib:
+# 2. hashlib:
 #    https://docs.python.org/2/library/hashlib.html
-# 4. Using cryptography for hashes (not using this currently)
+# 3. Using cryptography for hashes (not using this currently)
 #    https://cryptography.io/en/latest/hazmat/primitives/cryptographic-hashes/
 # ------------------------------------------------------------------------------
 
@@ -62,7 +60,6 @@ def url_safe_base64_encode(a_str):
 #
 # ------------------------------------------------------------------------------
 def url_safe_base64_decode(a_str):
-
     # If string % 4 -add back '='
     l_str = a_str.decode('utf-8')
     l_mod = len(a_str) % 4
@@ -73,8 +70,7 @@ def url_safe_base64_decode(a_str):
 # ------------------------------------------------------------------------------
 #
 # ------------------------------------------------------------------------------
-def decrypt_v3(a_key, a_token, a_verbose = False):
-
+def decrypt_v3(a_key, a_token, a_verbose=False):
     # Get sha-256 of key
     a_key = a_key.encode('utf-8')
     a_token = a_token.encode('utf-8')
@@ -96,11 +92,11 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
 
     if a_verbose:
         print('+-------------------------------------------------------------')
-        print(('| l_decoded_token: %s'%(l_decoded_token.hex())))
+        print('| l_decoded_token: %s'%(l_decoded_token.hex()))
         print('+-------------------------------------------------------------')
-        print(('| l_iv:            %s'%(l_iv.hex())))
-        print(('| l_ciphertext:    %s'%(l_ciphertext.hex())))
-        print(('| l_tag:           %s'%(l_tag.hex())))
+        print('| l_iv:            %s'%(l_iv.hex()))
+        print('| l_ciphertext:    %s'%(l_ciphertext.hex()))
+        print('| l_tag:           %s'%(l_tag.hex()))
         print('+-------------------------------------------------------------')
 
     # Construct a Cipher object, with the key, iv, and additionally the
@@ -114,17 +110,17 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
     # Decryption gets us the authenticated plaintext.
     # If the tag does not match an InvalidTag exception will be raised.
     l_decrypted_str = l_decryptor.update(l_ciphertext) + l_decryptor.finalize()
+    l_decrypted_str = l_decrypted_str.decode('utf-8')
 
     if a_verbose:
-        print(('| l_decrypted_str: %s'%(l_decrypted_str)))
+        print('| l_decrypted_str: %s'%(l_decrypted_str))
 
-    return l_decrypted_str.decode('utf-8')
+    return l_decrypted_str
 
 # ------------------------------------------------------------------------------
 #
 # ------------------------------------------------------------------------------
 def encrypt_v3(a_key, a_token, a_verbose = False):
-
     # Get sha-256 of key
     a_key = a_key.encode('utf-8')
     a_token = a_token.encode('utf-8')
@@ -151,11 +147,11 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
 
     if a_verbose:
         print('+-------------------------------------------------------------')
-        print(('| l_iv:            %s'%(l_iv.hex())))
-        print(('| l_ciphertext:    %s'%(l_ciphertext.hex())))
-        print(('| l_tag:           %s'%(l_encryptor.tag.hex())))
+        print('| l_iv:            %s'%(l_iv.hex()))
+        print('| l_ciphertext:    %s'%(l_ciphertext.hex()))
+        print('| l_tag:           %s'%(l_encryptor.tag.hex()))
         print('+-------------------------------------------------------------')
-        print(('| l_encoded_token: %s'%(l_iv_ciphertext.hex())))
+        print('| l_encoded_token: %s'%(l_iv_ciphertext.hex()))
         print('+-------------------------------------------------------------')
 
     return url_safe_base64_encode(l_iv_ciphertext).decode('utf-8')
@@ -164,7 +160,6 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
 # main
 # ------------------------------------------------------------------------------
 def main(argv):
-
     l_arg_parser = argparse.ArgumentParser(
                 description='Generate Random Security Config Post from Template.',
                 usage= '%(prog)s',
@@ -202,7 +197,6 @@ def main(argv):
                             default=False,
                             required=False)
 
-
     l_args = l_arg_parser.parse_args()
 
     l_token = ''
@@ -212,7 +206,7 @@ def main(argv):
         except Exception as e:
             if l_args.verbose:
                 print('| Failed to decrypt v3 token trying to decrypt as v1/2 token')
-                print(('| Error detail: type: %s error: %s, doc: %s, message: %s'% (type(e), e, e.__doc__, e.message)))
+                print('| Error detail: type: %s error message: %s, doc: %s'% (type(e), e, e.__doc__))
     else:
         l_token = encrypt_v3(a_key=l_args.key, a_token=l_args.token, a_verbose=l_args.verbose)
 
