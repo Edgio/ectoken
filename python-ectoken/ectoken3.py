@@ -45,7 +45,6 @@ import OpenSSL
 import codecs
 import os
 from cryptography.hazmat.backends import default_backend
-#from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 
 # ------------------------------------------------------------------------------
@@ -93,7 +92,6 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
     l_key = codecs.decode(l_key, 'hex')
 
     # Base 64 decode
-    #l_decoded_token = base64.urlsafe_b64decode(a_token)
     l_decoded_token = url_safe_base64_decode(a_token)
 
     # Split first 12 bytes off and use as iv
@@ -104,8 +102,6 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
 
     # Remainder is ciphertext
     l_ciphertext = l_decoded_token[G_IV_SIZE_BYTES:len(l_decoded_token)-G_AES_GCM_TAG_SIZE_BYTES]
-
-
 
     if a_verbose:
         print('+-------------------------------------------------------------')
@@ -139,21 +135,15 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
 def encrypt_v3(a_key, a_token, a_verbose = False):
 
     # Get sha-256 of key
-
     a_key = a_key.encode('utf-8')
     a_token = a_token.encode('utf-8')
 
     l_key = hashlib.sha256(a_key).hexdigest()#.decode('hex')
     l_key = codecs.decode(l_key, 'hex') # python 3 does not support .decode('hex')
-    #
-
-    # Seed rand with time...
-    # OpenSSL.rand.seed(str(time.time()))
 
     # Generate iv
     # l_iv = OpenSSL.rand.bytes(G_IV_SIZE_BYTES) # TODO Make constant...
     l_iv = os.urandom(G_IV_SIZE_BYTES) # TODO Make constant...
-
 
     # Construct an AES-GCM Cipher object with the given key and a
     # randomly generated IV.
@@ -167,11 +157,7 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
     # GCM does not require padding.
     l_ciphertext = l_encryptor.update(a_token) + l_encryptor.finalize()
 
-
-
     l_iv_ciphertext = l_iv + l_ciphertext + l_encryptor.tag
-
-    #print 'TAG (len:%d) : %s'%(len(l_encryptor.tag), l_encryptor.tag)
 
     if a_verbose:
         import pdb;pdb.set_trace()
