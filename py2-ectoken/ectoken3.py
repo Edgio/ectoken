@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 
 # /**
 # * Copyright (C) 2016 Verizon. All Rights Reserved.
@@ -20,11 +20,9 @@
 # References:
 # 1. Using cryptography for aes-gcm:
 #    https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/#cryptography.hazmat.primitives.ciphers.modes.GCM
-# 2. OpenSSL rand:
-#    http://pythonhosted.org//pyOpenSSL/api/rand.html
-# 3. hashlib:
+# 2. hashlib:
 #    https://docs.python.org/2/library/hashlib.html
-# 4. Using cryptography for hashes (not using this currently)
+# 3. Using cryptography for hashes (not using this currently)
 #    https://cryptography.io/en/latest/hazmat/primitives/cryptographic-hashes/
 # ------------------------------------------------------------------------------
 
@@ -36,10 +34,6 @@ import os
 import argparse
 import base64
 import sys
-import random
-import time
-import re
-from struct import pack
 import hashlib
 
 from cryptography.hazmat.backends import default_backend
