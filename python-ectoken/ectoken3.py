@@ -139,7 +139,6 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
     l_key = codecs.decode(l_key, 'hex')
 
     # Generate iv
-    # l_iv = OpenSSL.rand.bytes(G_IV_SIZE_BYTES) # TODO Make constant...
     l_iv = os.urandom(G_IV_SIZE_BYTES) # TODO Make constant...
 
     # Construct an AES-GCM Cipher object with the given key and a
