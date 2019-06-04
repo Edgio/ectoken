@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # /**
 # * Copyright (C) 2016 Verizon. All Rights Reserved.
@@ -97,11 +97,11 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
 
     if a_verbose:
         print('+-------------------------------------------------------------')
-        print('| l_decoded_token: %s'%(l_decoded_token.encode('hex')))
+        print(('| l_decoded_token: %s'%(l_decoded_token.encode('hex'))))
         print('+-------------------------------------------------------------')
-        print('| l_iv:            %s'%(l_iv.encode('hex')))
-        print('| l_ciphertext:    %s'%(l_ciphertext.encode('hex')))
-        print('| l_tag:           %s'%(l_tag.encode('hex')))
+        print(('| l_iv:            %s'%(l_iv.encode('hex'))))
+        print(('| l_ciphertext:    %s'%(l_ciphertext.encode('hex'))))
+        print(('| l_tag:           %s'%(l_tag.encode('hex'))))
         print('+-------------------------------------------------------------')
 
     # Construct a Cipher object, with the key, iv, and additionally the
@@ -117,7 +117,7 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
     l_decrypted_str = l_decryptor.update(l_ciphertext) + l_decryptor.finalize()
 
     if a_verbose:
-        print('| l_decrypted_str: %s'%(l_decrypted_str))
+        print(('| l_decrypted_str: %s'%(l_decrypted_str)))
 
     return l_decrypted_str
 
@@ -153,11 +153,11 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
 
     if a_verbose:
         print('+-------------------------------------------------------------')
-        print('| l_iv:            %s'%(l_iv.encode('hex')))
-        print('| l_ciphertext:    %s'%(l_ciphertext.encode('hex')))
-        print('| l_tag:           %s'%(l_encryptor.tag.encode('hex')))
+        print(('| l_iv:            %s'%(l_iv.encode('hex'))))
+        print(('| l_ciphertext:    %s'%(l_ciphertext.encode('hex'))))
+        print(('| l_tag:           %s'%(l_encryptor.tag.encode('hex'))))
         print('+-------------------------------------------------------------')
-        print('| l_encoded_token: %s'%(l_iv_ciphertext.encode('hex')))
+        print(('| l_encoded_token: %s'%(l_iv_ciphertext.encode('hex'))))
         print('+-------------------------------------------------------------')
 
     return url_safe_base64_encode(l_iv_ciphertext)
@@ -214,7 +214,7 @@ def main(argv):
         except Exception as e:
             if l_args.verbose:
                 print('| Failed to decrypt v3 token trying to decrypt as v1/2 token')
-                print('| Error detail: type: %s error: %s, doc: %s, message: %s'% (type(e), e, e.__doc__, e.message))
+                print(('| Error detail: type: %s error: %s, doc: %s, message: %s'% (type(e), e, e.__doc__, e.message)))
     else:
         l_token = encrypt_v3(a_key=l_args.key, a_token=l_args.token, a_verbose=l_args.verbose)
 
