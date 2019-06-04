@@ -60,12 +60,9 @@ G_AES_GCM_TAG_SIZE_BYTES = 16
 #
 # ------------------------------------------------------------------------------
 def url_safe_base64_encode(a_str):
-    l_str = base64.urlsafe_b64encode(a_str)
+    l_str = base64.urlsafe_b64encode(a_str).decode().replace('=', '')
+    l_str = l_str.encode()
     return l_str
-    #
-    # print("original l_str: ", l_str)
-    something = l_str.encode('utf-8')
-    return something.replace('=', '')
 
 # ------------------------------------------------------------------------------
 #
@@ -160,7 +157,6 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
     l_iv_ciphertext = l_iv + l_ciphertext + l_encryptor.tag
 
     if a_verbose:
-        import pdb;pdb.set_trace()
         print('+-------------------------------------------------------------')
         print(('| l_iv:            %s'%(l_iv.hex())))
         print(('| l_ciphertext:    %s'%(l_ciphertext.hex())))
