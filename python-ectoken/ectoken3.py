@@ -63,7 +63,7 @@ G_AES_GCM_TAG_SIZE_BYTES = 16
 def url_safe_base64_encode(a_str):
     l_str = base64.urlsafe_b64encode(a_str)
     return l_str
-    # import pdb;pdb.set_trace()
+    #
     # print("original l_str: ", l_str)
     something = l_str.encode('utf-8')
     return something.replace('=', '')
@@ -72,7 +72,7 @@ def url_safe_base64_encode(a_str):
 #
 # ------------------------------------------------------------------------------
 def url_safe_base64_decode(a_str):
-    import pdb;pdb.set_trace()
+
     # If string % 4 -add back '='
     l_str = a_str.decode('utf-8')
     l_mod = len(a_str) % 4
@@ -84,11 +84,11 @@ def url_safe_base64_decode(a_str):
 #
 # ------------------------------------------------------------------------------
 def decrypt_v3(a_key, a_token, a_verbose = False):
-    import pdb;pdb.set_trace()
+
     # Get sha-256 of key
     a_key = a_key.encode('utf-8')
     a_token = a_token.encode('utf-8')
-    
+
     l_key = hashlib.sha256(a_key).hexdigest()#.decode('hex')
     l_key = codecs.decode(l_key, 'hex')
 
@@ -105,13 +105,15 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
     # Remainder is ciphertext
     l_ciphertext = l_decoded_token[G_IV_SIZE_BYTES:len(l_decoded_token)-G_AES_GCM_TAG_SIZE_BYTES]
 
+
+
     if a_verbose:
         print('+-------------------------------------------------------------')
-        print(('| l_decoded_token: %s'%(l_decoded_token.encode('hex'))))
+        print(('| l_decoded_token: %s'%(l_decoded_token.hex())))
         print('+-------------------------------------------------------------')
-        print(('| l_iv:            %s'%(l_iv.encode('hex'))))
-        print(('| l_ciphertext:    %s'%(l_ciphertext.encode('hex'))))
-        print(('| l_tag:           %s'%(l_tag.encode('hex'))))
+        print(('| l_iv:            %s'%(l_iv.hex())))
+        print(('| l_ciphertext:    %s'%(l_ciphertext.hex())))
+        print(('| l_tag:           %s'%(l_tag.hex())))
         print('+-------------------------------------------------------------')
 
     # Construct a Cipher object, with the key, iv, and additionally the
@@ -129,7 +131,7 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
     if a_verbose:
         print(('| l_decrypted_str: %s'%(l_decrypted_str)))
 
-    return l_decrypted_str
+    return l_decrypted_str.decode('utf-8')
 
 # ------------------------------------------------------------------------------
 #
@@ -137,13 +139,13 @@ def decrypt_v3(a_key, a_token, a_verbose = False):
 def encrypt_v3(a_key, a_token, a_verbose = False):
 
     # Get sha-256 of key
-    import pdb;pdb.set_trace()
+
     a_key = a_key.encode('utf-8')
     a_token = a_token.encode('utf-8')
-    
+
     l_key = hashlib.sha256(a_key).hexdigest()#.decode('hex')
     l_key = codecs.decode(l_key, 'hex') # python 3 does not support .decode('hex')
-    # import pdb;pdb.set_trace()
+    #
 
     # Seed rand with time...
     # OpenSSL.rand.seed(str(time.time()))
@@ -151,8 +153,8 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
     # Generate iv
     # l_iv = OpenSSL.rand.bytes(G_IV_SIZE_BYTES) # TODO Make constant...
     l_iv = os.urandom(G_IV_SIZE_BYTES) # TODO Make constant...
-    import pdb;pdb.set_trace()
-    
+
+
     # Construct an AES-GCM Cipher object with the given key and a
     # randomly generated IV.
     l_encryptor = Cipher(
@@ -166,21 +168,22 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
     l_ciphertext = l_encryptor.update(a_token) + l_encryptor.finalize()
 
 
-    
+
     l_iv_ciphertext = l_iv + l_ciphertext + l_encryptor.tag
 
     #print 'TAG (len:%d) : %s'%(len(l_encryptor.tag), l_encryptor.tag)
 
     if a_verbose:
+        import pdb;pdb.set_trace()
         print('+-------------------------------------------------------------')
-        print(('| l_iv:            %s'%(l_iv.encode('hex'))))
-        print(('| l_ciphertext:    %s'%(l_ciphertext.encode('hex'))))
-        print(('| l_tag:           %s'%(l_encryptor.tag.encode('hex'))))
+        print(('| l_iv:            %s'%(l_iv.hex())))
+        print(('| l_ciphertext:    %s'%(l_ciphertext.hex())))
+        print(('| l_tag:           %s'%(l_encryptor.tag.hex())))
         print('+-------------------------------------------------------------')
-        print(('| l_encoded_token: %s'%(l_iv_ciphertext.encode('hex'))))
+        print(('| l_encoded_token: %s'%(l_iv_ciphertext.hex())))
         print('+-------------------------------------------------------------')
 
-    return url_safe_base64_encode(l_iv_ciphertext)
+    return url_safe_base64_encode(l_iv_ciphertext).decode('utf-8')
 
 # ------------------------------------------------------------------------------
 # main
