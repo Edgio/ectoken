@@ -24,6 +24,7 @@
 #    https://docs.python.org/2/library/hashlib.html
 # 3. Using cryptography for hashes (not using this currently)
 #    https://cryptography.io/en/latest/hazmat/primitives/cryptographic-hashes/
+# NOTE: encode() decode() default is utf-8
 # ------------------------------------------------------------------------------
 
 
@@ -61,7 +62,7 @@ def url_safe_base64_encode(a_str):
 # ------------------------------------------------------------------------------
 def url_safe_base64_decode(a_str):
     # If string % 4 -add back '='
-    l_str = a_str.decode('utf-8')
+    l_str = a_str.decode()
     l_mod = len(a_str) % 4
     if l_mod:
         l_str += '=' * (4 - l_mod)
@@ -72,8 +73,8 @@ def url_safe_base64_decode(a_str):
 # ------------------------------------------------------------------------------
 def decrypt_v3(a_key, a_token, a_verbose=False):
     # Get sha-256 of key
-    a_key = a_key.encode('utf-8')
-    a_token = a_token.encode('utf-8')
+    a_key = a_key.encode()
+    a_token = a_token.encode()
 
     l_key = hashlib.sha256(a_key).hexdigest()
     l_key = codecs.decode(l_key, 'hex')
@@ -110,7 +111,7 @@ def decrypt_v3(a_key, a_token, a_verbose=False):
     # Decryption gets us the authenticated plaintext.
     # If the tag does not match an InvalidTag exception will be raised.
     l_decrypted_str = l_decryptor.update(l_ciphertext) + l_decryptor.finalize()
-    l_decrypted_str = l_decrypted_str.decode('utf-8')
+    l_decrypted_str = l_decrypted_str.decode()
 
     if a_verbose:
         print('| l_decrypted_str: %s'%(l_decrypted_str))
@@ -122,8 +123,8 @@ def decrypt_v3(a_key, a_token, a_verbose=False):
 # ------------------------------------------------------------------------------
 def encrypt_v3(a_key, a_token, a_verbose = False):
     # Get sha-256 of key
-    a_key = a_key.encode('utf-8')
-    a_token = a_token.encode('utf-8')
+    a_key = a_key.encode()
+    a_token = a_token.encode()
 
     l_key = hashlib.sha256(a_key).hexdigest()
     l_key = codecs.decode(l_key, 'hex')
@@ -154,7 +155,7 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
         print('| l_encoded_token: %s'%(l_iv_ciphertext.hex()))
         print('+-------------------------------------------------------------')
 
-    return url_safe_base64_encode(l_iv_ciphertext).decode('utf-8')
+    return url_safe_base64_encode(l_iv_ciphertext).decode()
 
 # ------------------------------------------------------------------------------
 # main
