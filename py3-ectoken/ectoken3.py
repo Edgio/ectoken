@@ -76,8 +76,7 @@ def decrypt_v3(a_key, a_token, a_verbose=False):
     a_key = a_key.encode()
     a_token = a_token.encode()
 
-    l_key = hashlib.sha256(a_key).hexdigest()
-    l_key = codecs.decode(l_key, 'hex')
+    l_key = hashlib.sha256(a_key).digest()
 
     # Base 64 decode
     l_decoded_token = url_safe_base64_decode(a_token)
@@ -126,8 +125,7 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
     a_key = a_key.encode()
     a_token = a_token.encode()
 
-    l_key = hashlib.sha256(a_key).hexdigest()
-    l_key = codecs.decode(l_key, 'hex')
+    l_key = hashlib.sha256(a_key).digest()
 
     # Generate iv
     l_iv = os.urandom(G_IV_SIZE_BYTES) # TODO Make constant...
