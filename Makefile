@@ -63,7 +63,13 @@ install-source:
 	@-rm source_packages/perl-ecencrypt.zip
 	zip -r source_packages/perl-ecencrypt.zip perl-ecencrypt -i perl-ecencrypt/ectoken3.pl
 	@rm -rf perl-ecencrypt
-	# Python
+	# Python2
+	@rm -rf python-ecencrypt
+	@cp -r py2-ectoken python-ecencrypt
+	@-rm source_packages/python-ecencrypt.zip
+	zip -r source_packages/python-ecencrypt.zip python-ecencrypt -i python-ecencrypt/*.py -i python-ecencrypt/requirements.txt -i python-ecencrypt/deps.sh
+	@rm -rf python-ecencrypt
+	# Python3
 	@rm -rf python-ecencrypt
 	@cp -r py3-ectoken python-ecencrypt
 	@-rm source_packages/python-ecencrypt.zip
