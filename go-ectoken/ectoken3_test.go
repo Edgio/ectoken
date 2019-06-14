@@ -12,11 +12,11 @@ const (
 
 func TestEncryptV3(t *testing.T) {
 	// should always get a hash back greater than 0
-	if result := len(EncryptV3("somekey", "")); result <= 0 {
+	if result := len(EncryptV3(key, "")); result <= 0 {
 		t.Error(ermsg)
 	}
 
-	if result := len(EncryptV3("some", "sometoken")); result <= 0 {
+	if result := len(EncryptV3(key, token)); result <= 0 {
 		t.Error(ermsg)
 	}
 }
