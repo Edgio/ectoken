@@ -7,15 +7,16 @@ import (
 const (
 	key   = "somekey"
 	token = "ec_expire=1257642471&ec_secure=33"
+	ermsg = "expected string hash recieved nothing."
 )
 
 func TestEncryptV3(t *testing.T) {
 	if result := len(EncryptV3("somekey", "")); result <= 0 {
-		t.Error("expected string hash recieved nothing.")
+		t.Error(ermsg)
 	}
 
 	if result := len(EncryptV3("some", "sometoken")); result <= 0 {
-		t.Error("expected string hash recieved nothing.")
+		t.Error(ermsg)
 	}
 }
 
