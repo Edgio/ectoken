@@ -11,6 +11,7 @@ const (
 )
 
 func TestEncryptV3(t *testing.T) {
+	// should always get a hash back greater than 0
 	if result := len(EncryptV3("somekey", "")); result <= 0 {
 		t.Error(ermsg)
 	}
@@ -28,6 +29,7 @@ func TestDecryptV3(t *testing.T) {
 		t.Error(err)
 	}
 
+	// the decrypted token value should equal the string used to encrypt
 	if result != token {
 		t.Errorf("expected decrypted value to be %s, got %s\n", token, tokenHash)
 	}
