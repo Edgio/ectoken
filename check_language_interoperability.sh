@@ -54,10 +54,10 @@ check_v3_token() {
 
     #local c32_token="$(./c-ectoken/ecencrypt/32/ectoken${UTILITY_NAME_VER} "${key}" "${test_val}")"
     local c64_token="$(./c-ectoken/ecencrypt/64/ectoken${UTILITY_NAME_VER} "${key}" "${test_val}")"
-    local py_token="$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --token "${test_val}")"
+    local py_token="$(./py3-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --token "${test_val}")"
 
     if [[ "$(./c-ectoken/ecencrypt/64/ectoken${UTILITY_NAME_VER} decrypt "${key}" "${c64_token}")" -ne \
-          "$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --decrypt --token "${py_token}")" ]]
+          "$(./py3-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --decrypt --token "${py_token}")" ]]
     then
         echo "Failure"
         exit 1
@@ -85,7 +85,7 @@ check_v3_token() {
     #sleep 1
     JAVA_TOK="$(java -jar java-ectoken/ECToken${UTILITY_NAME_VER}.jar encrypt "${KEY}" "${TEST_VAL}")"
     #sleep 1
-    PY_TOK="$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${KEY}" --token "${TEST_VAL}")"
+    PY_TOK="$(./py3-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${KEY}" --token "${TEST_VAL}")"
 
     set +o errexit
 
@@ -122,7 +122,7 @@ check_v3_token() {
             FAILED=1
         }
 
-        PY_DECRYPT="$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --decrypt --key "${KEY}" --token "${1}")"
+        PY_DECRYPT="$(./py3-ectoken/ectoken${UTILITY_NAME_VER}.py --decrypt --key "${KEY}" --token "${1}")"
         echo "${PY_DECRYPT}" | fgrep "${TEST_VAL}" &>/dev/null || {
             echo "FAILURE:  Python decryption check failed for ${NAME}.  Missing original value: ${PY_DECRYPT}"
             let "NUM_FAIL = NUM_FAIL + 1"
