@@ -54,10 +54,19 @@ check_v3_token() {
 
     #local c32_token="$(./c-ectoken/ecencrypt/32/ectoken${UTILITY_NAME_VER} "${key}" "${test_val}")"
     local c64_token="$(./c-ectoken/ecencrypt/64/ectoken${UTILITY_NAME_VER} "${key}" "${test_val}")"
-    local py_token="$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --token "${test_val}")"
+    local py3_token="$(./py3-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --token "${test_val}")"
 
     if [[ "$(./c-ectoken/ecencrypt/64/ectoken${UTILITY_NAME_VER} decrypt "${key}" "${c64_token}")" -ne \
-          "$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --decrypt --token "${py_token}")" ]]
+          "$(./py3-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --decrypt --token "${py3_token}")" ]]
+    then
+        echo "Failure"
+        exit 1
+    fi
+
+    local py2_token="$(./py2-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --token "${test_val}")"
+
+    if [[ "$(./c-ectoken/ecencrypt/64/ectoken${UTILITY_NAME_VER} decrypt "${key}" "${c64_token}")" -ne \
+          "$(./py2-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${key}" --decrypt --token "${py2_token}")" ]]
     then
         echo "Failure"
         exit 1
@@ -85,7 +94,9 @@ check_v3_token() {
     #sleep 1
     JAVA_TOK="$(java -jar java-ectoken/ECToken${UTILITY_NAME_VER}.jar encrypt "${KEY}" "${TEST_VAL}")"
     #sleep 1
-    PY_TOK="$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${KEY}" --token "${TEST_VAL}")"
+    PY3_TOK="$(./py3-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${KEY}" --token "${TEST_VAL}")"
+    #sleep 1
+    PY2_TOK="$(./py2-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${KEY}" --token "${TEST_VAL}")"
 
     set +o errexit
 
@@ -122,9 +133,16 @@ check_v3_token() {
             FAILED=1
         }
 
-        PY_DECRYPT="$(./python-ectoken/ectoken${UTILITY_NAME_VER}.py --decrypt --key "${KEY}" --token "${1}")"
-        echo "${PY_DECRYPT}" | fgrep "${TEST_VAL}" &>/dev/null || {
-            echo "FAILURE:  Python decryption check failed for ${NAME}.  Missing original value: ${PY_DECRYPT}"
+        PY3_DECRYPT="$(./py3-ectoken/ectoken${UTILITY_NAME_VER}.py --decrypt --key "${KEY}" --token "${1}")"
+        echo "${PY3_DECRYPT}" | fgrep "${TEST_VAL}" &>/dev/null || {
+            echo "FAILURE:  Python3 decryption check failed for ${NAME}.  Missing original value: ${PY3_DECRYPT}"
+            let "NUM_FAIL = NUM_FAIL + 1"
+            FAILED=1
+        }
+
+        PY2_DECRYPT="$(./py2-ectoken/ectoken${UTILITY_NAME_VER}.py --decrypt --key "${KEY}" --token "${1}")"
+        echo "${PY2_DECRYPT}" | fgrep "${TEST_VAL}" &>/dev/null || {
+            echo "FAILURE:  Python2 decryption check failed for ${NAME}.  Missing original value: ${PY2_DECRYPT}"
             let "NUM_FAIL = NUM_FAIL + 1"
             FAILED=1
         }
@@ -133,7 +151,7 @@ check_v3_token() {
             return 1
         fi
 
-        echo "SUCCESS:  C, C++, Java and Python correctly decrypt ${NAME}"
+        echo "SUCCESS:  C, C++, Java and Python2/3 correctly decrypt ${NAME}"
     }
 
     is_valid "${C32_TOK}" "32-bit C, key length: ${KEYLEN}"
@@ -142,7 +160,8 @@ check_v3_token() {
     is_valid "${PHP_TOK}" "PHP, key length: ${KEYLEN}"
     is_valid "${PERL_TOK}" "PERL, key length: ${KEYLEN}"
     is_valid "${JAVA_TOK}" "JAVA, key length: ${KEYLEN}"
-    is_valid "${PY_TOK}" "Python, key length: ${KEYLEN}"
+    is_valid "${PY3_TOK}" "Python3, key length: ${KEYLEN}"
+    is_valid "${PY2_TOK}" "Python2, key length: ${KEYLEN}"
 
     echo "Done v3 token checks keylen ${KEYLEN} ----------------------------------"
 

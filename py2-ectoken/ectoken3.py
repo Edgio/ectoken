@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 
 # /**
 # * Copyright (C) 2016 Verizon. All Rights Reserved.
@@ -20,11 +20,9 @@
 # References:
 # 1. Using cryptography for aes-gcm:
 #    https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/#cryptography.hazmat.primitives.ciphers.modes.GCM
-# 2. OpenSSL rand:
-#    http://pythonhosted.org//pyOpenSSL/api/rand.html
-# 3. hashlib:
+# 2. hashlib:
 #    https://docs.python.org/2/library/hashlib.html
-# 4. Using cryptography for hashes (not using this currently)
+# 3. Using cryptography for hashes (not using this currently)
 #    https://cryptography.io/en/latest/hazmat/primitives/cryptographic-hashes/
 # ------------------------------------------------------------------------------
 
@@ -32,16 +30,11 @@
 # ------------------------------------------------------------------------------
 # Imports
 # ------------------------------------------------------------------------------
+import os
 import argparse
 import base64
 import sys
-import random
-import time
-import re
-from struct import pack
 import hashlib
-
-import OpenSSL
 
 from cryptography.hazmat.backends import default_backend
 #from cryptography.hazmat.primitives import hashes
@@ -128,12 +121,7 @@ def encrypt_v3(a_key, a_token, a_verbose = False):
 
     # Get sha-256 of key
     l_key = hashlib.sha256(a_key).hexdigest().decode('hex')
-
-    # Seed rand with time...
-    OpenSSL.rand.seed(str(time.time()))
-
-    # Generate iv
-    l_iv = OpenSSL.rand.bytes(G_IV_SIZE_BYTES) # TODO Make constant...
+    l_iv = os.urandom(G_IV_SIZE_BYTES)
 
     # Construct an AES-GCM Cipher object with the given key and a
     # randomly generated IV.
