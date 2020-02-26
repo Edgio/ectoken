@@ -75,7 +75,7 @@ namespace ecencryptstdlib
         {
             DateTime expTime = DateTime.UtcNow + expirationTimeSpan;
             return EncryptV3(key, expTime, clientIPAddress, allowedCountries, deniedCountries, allowedReferrers, deniedReferrers,
-                allowedProtocol, deniedProtocol);
+                allowedProtocol, deniedProtocol, allowedUrls);
         }
         /// <summary>
         /// This helper methods allows to create expiring CDN encryption tokens
