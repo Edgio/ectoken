@@ -103,10 +103,7 @@ namespace ecencryptstdlib
         string deniedProtocol = null,
         string allowedUrls = null)
         {
-            StringBuilder token = new StringBuilder();
-            /// ec_expire=1185943200&ec_clientip=111.11.111.11&ec_country_allow=US&ec_ref_allow=ec1.com"
-            /// php -d extension=.libs/ectoken.so example.php
-            /// php -d extension=.libs/ectoken.so -r '$token = ectoken_encrypt_token("12345678", "ec_expire=1185943200&ec_clientip=111.11.111.11&ec_country_allow=US&ec_ref_allow=ec1.com"); echo $token;'
+            StringBuilder token = new StringBuilder();            
             TimeSpan t = expirationTime - new DateTime(1970, 1, 1);
             int epoch = (int)t.TotalSeconds;
             token.Append($"ec_expire={epoch}");
