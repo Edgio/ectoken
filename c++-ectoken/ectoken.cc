@@ -254,6 +254,7 @@ bool do_decrypt(std::string* ao_plaintext, const std::string& a_key, const std::
                         ao_plaintext->length());
         }
 done:
+        delete[] token;
         return retval;
 }
 //! ----------------------------------------------------------------------------
@@ -313,6 +314,7 @@ bool do_encrypt(std::string* ao_ciphertext,
                         a_plaintext.c_str(), a_plaintext.length(),
                         ao_ciphertext->c_str(), ao_ciphertext->length());
 done:
+        delete[] token;
         return retval;
 }
 //! ----------------------------------------------------------------------------
