@@ -1,0 +1,2 @@
+[target.'cfg(not(target_arch = "wasm32"))']
+rustflags = ["-C", "target-feature=+aes,+sse2,+sse4.1,+ssse3"]

@@ -1,0 +1,14 @@
+[package]
+name = "ectoken"
+version = "0.1.0"
+authors = ["derek <derek@vdms.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+aes-gcm = "0.8"
+rand = "0.8"
+base64 ="0.13"
+sha2 = "0.9"
+clap = "2.33"

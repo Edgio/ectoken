@@ -262,3 +262,5 @@ __pycache__/
 
 #OSX stuff
 .DS_Store
+
+rs-ectoken/target/

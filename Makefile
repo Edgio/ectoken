@@ -21,6 +21,7 @@ all:
 	cd php-ectoken && ./build.sh
 	$(MAKE) -C java-ectoken
 	$(MAKE) -C py3-ectoken
+	$(MAKE) -C rs-ectoken
 
 check: ./c-ectoken/ecencrypt/32/ectoken3 ./c-ectoken/ecencrypt/64/ectoken3 ./c++-ectoken/ectoken3 ./php-ectoken/.libs/ectoken.so ./java-ectoken/ECToken3.java
     # run as many language-to-language checks as we have binaries for

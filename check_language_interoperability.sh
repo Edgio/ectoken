@@ -37,7 +37,10 @@
 #   80be25cb0b9728d50e2e106719791d0ef5a12b5904067720df
 #   $ java ECToken  decrypt "yourkey" "80be25cb0b9728d50e2e106719791d0ef5a12b5904067720df"
 #   yourmessage
-
+# Rust example
+#   $./rs-ectoken/target/release/ectoken -d -k "yourkey" -t $(./rs-ectoken/target/release/ectoken -k "yourkey" -t "yourmessage")
+#   yourmessage
+#   $
 NUM_FAIL=0
 UTILITY_NAME_VER="3"
 
@@ -97,6 +100,7 @@ check_v3_token() {
     PY3_TOK="$(./py3-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${KEY}" --token "${TEST_VAL}")"
     #sleep 1
     PY2_TOK="$(./py2-ectoken/ectoken${UTILITY_NAME_VER}.py --key "${KEY}" --token "${TEST_VAL}")"
+    RS_TOK="$(./rs-ectoken/target/release/ectoken -k "${KEY}" -t "${TEST_VAL}")"
 
     set +o errexit
 
@@ -147,11 +151,18 @@ check_v3_token() {
             FAILED=1
         }
 
+        RS_DECRYPT="$(./rs-ectoken/target/release/ectoken -d --key "${KEY}" --token "${1}")"
+        echo "${RS_DECRYPT}" | fgrep "${TEST_VAL}" &>dev/null || {
+            echo "FAILURE: Rust decryption check failed for ${NAME}. Missing original value: ${RS_DECRYPT}"
+            let "{NUM_FAIL = NUM_FAIL + 1"
+            FAILED=1
+        }
+
         if [[ "${FAILED}" = "1" ]]; then
             return 1
         fi
 
-        echo "SUCCESS:  C, C++, Java and Python2/3 correctly decrypt ${NAME}"
+        echo "SUCCESS:  C, C++, Java, Python2/3, and Rust correctly decrypt ${NAME}"
     }
 
     is_valid "${C32_TOK}" "32-bit C, key length: ${KEYLEN}"
@@ -162,6 +173,7 @@ check_v3_token() {
     is_valid "${JAVA_TOK}" "JAVA, key length: ${KEYLEN}"
     is_valid "${PY3_TOK}" "Python3, key length: ${KEYLEN}"
     is_valid "${PY2_TOK}" "Python2, key length: ${KEYLEN}"
+    is_valid "${RS_TOK}" "Rust, key length: ${KEYLEN}"
 
     echo "Done v3 token checks keylen ${KEYLEN} ----------------------------------"
 
