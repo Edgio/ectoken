@@ -262,3 +262,8 @@ __pycache__/
 
 #OSX stuff
 .DS_Store
+
+# Eclipse
+.cproject
+.project
+.settings/
