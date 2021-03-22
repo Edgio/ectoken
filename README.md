@@ -13,47 +13,78 @@
 
 ## Background
 
-C implementation of the "EdgeCast Token" (`ectoken`)
+C implementation of the "EdgeCast Token" (`ectoken`), an [AES-GCM](https://tools.ietf.org/html/rfc5288) token.
 
 ## Install
 
-### With `pip`
+The C implementation requires [`gcc`](https://gcc.gnu.org/) to build and [OpenSSL](https://www.openssl.org/) `libcrypto`to link.
+ 
+### Building with Make
+
+To build, run the `make` command.
 
 ```sh
-pip install -r requirements.txt
+ectoken>make
+gcc -m64 -O2 -Wall -Werror -std=gnu99 util/ec_encrypt.c -I. ectoken.c base64.c -o ectoken -lcrypto  -lm
+strip ectoken
+cc    -c -o ectoken.o ectoken.c
+cc    -c -o base64.o base64.c
+ar rcs libectoken.a ectoken.o base64.o
 ```
+
+This will build a library and an executable (`ectoken`) for command line usage.
+
+### Running tests
+
+Run `make test` from the project directory.
+
+```sh
+ectoken>make test
+gcc -O2 -Wall -Werror -std=gnu99 util/ec_encrypt.c -I. ectoken.c base64.c -o ectoken -lcrypto  -lm
+cc    -c -o ectoken.o ectoken.c
+cc    -c -o base64.o base64.c
+ar rcs libectoken.a ectoken.o base64.o
+gcc -std=c99 -I. tests/ectoken_test.c -lcrypto -lm -o ectoken_test
+./ectoken_test
+test_short_size_calculations
+success
+...
+test_full_flow
+success
+
+test_full_flow
+success
+```
+
 
 ## Usage
 
 ### Help
 ```sh
->./ectoken3.py -h
-usage: ectoken3.py
-
-Generate Random Security Config Post from Template.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -k KEY, --key KEY     Token Key.
-  -t TOKEN, --token TOKEN
-                        Token to encrypt or decrypt.
-  -d, --decrypt         Decrypt.
-  -v, --verbose         Verbosity.
+>./ectoken 
+Error wrong number of arguments specified
+Usage: 
+ To Encrypt:
+     ec_encrypt <key> <text>
+ or:
+     ec_encrypt encrypt <key> <text>
+ To Decrypt:
+     ec_encrypt decrypt <key> <text>
 ```
 
 ### Encrypt
 
 Encrypt clear text token `<token>` with key: `<key>`:
 ```sh
-~>./ectoken3.py -k MY_SECRET_KEY -t MY_COOL_TOKEN
-26oBaqCbdLyJD5RjsHBYGsIDQGOehPo2rZfGwGey-ubhciakzPwRIdQ
+>./ectoken encrypt MY_SECRET_KEY MY_COOL_TOKEN
+fVSYBBTynMkvQECGV-Kdfp333R-MGY2fsrrpVyuqd7OiuAUsQ8ITrL0
 ```
 
 ### Decrypt
 
 Decrypt ciphertext token `<token>` with key: `<key>`:
 ```sh
-~>./ectoken3.py -k MY_SECRET_KEY -t '26oBaqCbdLyJD5RjsHBYGsIDQGOehPo2rZfGwGey-ubhciakzPwRIdQ' -d
+>./ectoken decrypt MY_SECRET_KEY fVSYBBTynMkvQECGV-Kdfp333R-MGY2fsrrpVyuqd7OiuAUsQ8ITrL0
 MY_COOL_TOKEN
 ```
 

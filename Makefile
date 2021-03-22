@@ -13,7 +13,7 @@
 # ------------------------------------------------------------------------------
 OPENSSL_ROOT=
 OPENSSL_INCLUDE=
-OPENSSL_LIBS=-lssl -lcrypto
+OPENSSL_LIBS=-lcrypto
 # ------------------------------------------------------------------------------
 # all target
 # ------------------------------------------------------------------------------
@@ -22,34 +22,24 @@ all: ectoken libectoken.a
 # ectoken
 # ------------------------------------------------------------------------------
 ectoken: util/ec_encrypt.c ectoken.c base64.c
-	gcc -m64 -O2 -Wall -Werror -std=gnu99 util/ec_encrypt.c -I. ectoken.c base64.c -o ectoken $(OPENSSL_LIBS) $(OPENSSL_INCLUDE) -lm
-	strip ectoken
+	gcc -O2 -Wall -Werror -std=gnu99 util/ec_encrypt.c -I. ectoken.c base64.c -o ectoken $(OPENSSL_LIBS) $(OPENSSL_INCLUDE) -lm
 # ------------------------------------------------------------------------------
 # libectoken
 # ------------------------------------------------------------------------------
 libectoken.a: ectoken.o base64.o
 	ar rcs $@ ectoken.o base64.o
 # ------------------------------------------------------------------------------
-# tests
+# ectoken_test
 # ------------------------------------------------------------------------------
-#ectoken_test.o: tests/ectoken_test.c base64.o
-#	gcc -c -std=c99 tests/ectoken_test.c base64.o -g -Wall -Wno-format -Werror -O2 -o $@ $(OPENSSL_LIBS) $(OPENSSL_INCLUDE)
-#ectoken.o: ectoken.c
-#	gcc -c -std=c99 ectoken.c -g -Wall -Wno-format -Werror -O2 -o $@ -fPIC $(OPENSSL_LIBS) $(OPENSSL_INCLUDE)
-#base64.o: base64.c
-#	gcc -c -std=c99 base64.c -lm -g -Wall -Wno-format -Werror -O2 -o $@ -fPIC $(OPENSSL_LIBS) $(OPENSSL_INCLUDE)
+ectoken_test: tests/ectoken_test.c all
+	gcc -std=c99 -I. tests/ectoken_test.c -lcrypto -lm -o ectoken_test
 # ------------------------------------------------------------------------------
-# 
+# test
 # ------------------------------------------------------------------------------
-#ectoken_test: ectoken_test.o libectoken.a
-#	gcc -std=c99 ectoken_test.o libectoken.a -lm -g -Wall -Wno-format -O2 -o $@ $(OPENSSL_LIBS) $(OPENSSL_INCLUDE)
-# ------------------------------------------------------------------------------
-# fails to link?
-# ------------------------------------------------------------------------------
-#ectoken_static:
-#	gcc -std=c99 ectoken.c base64.c -static -Wall -Wno-format -Werror -O2 -o $@ $(OPENSSL_LIBS) $(OPENSSL_INCLUDE)
+test: ectoken_test
+	./ectoken_test
 # ------------------------------------------------------------------------------
 # clean
 # ------------------------------------------------------------------------------
 clean:
-	-rm *.o *.a ectoken
+	-rm -f *.o *.a ectoken ectoken_test

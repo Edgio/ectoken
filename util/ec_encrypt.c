@@ -1,7 +1,7 @@
 //! ----------------------------------------------------------------------------
 //! Copyright Verizon.
 //!
-//! \file:    ec_ecnrypt.c
+//! \file:    ec_encrypt.c
 //! \details: TODO
 //!
 //! Licensed under the terms of the Apache 2.0 open source license.
