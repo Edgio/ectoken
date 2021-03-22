@@ -1,5 +1,5 @@
 # ectoken
-> C implementation of EdgeCast token (`ectoken`)_
+> _C implementation of EdgeCast token (`ectoken`)_
 
 
 ## Table of Contents
