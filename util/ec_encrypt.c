@@ -1,36 +1,32 @@
-/**
-* Copyright (C) 2016 Verizon. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-
+//! ----------------------------------------------------------------------------
+//! Copyright Verizon.
+//!
+//! \file:    ec_encrypt.c
+//! \details: TODO
+//!
+//! Licensed under the terms of the Apache 2.0 open source license.
+//! Please refer to the LICENSE file in the project root for the terms.
+//! ----------------------------------------------------------------------------
+//! ----------------------------------------------------------------------------
+//! includes
+//! ----------------------------------------------------------------------------
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-#include "ectoken_v3.h"
-
-/*******************************************************************************
- * typedefs
- *******************************************************************************/
+#include "ectoken.h"
+//! ----------------------------------------------------------------------------
+//! types
+//! ----------------------------------------------------------------------------
 typedef enum {
      EC_ACTION_ENCRYPT = 0,
      EC_ACTION_DECRYPT,
 } ec_action_t;
-
-/*******************************************************************************
- * usage
- *******************************************************************************/
+//! ----------------------------------------------------------------------------
+//! \details: TODO
+//! \return:  TODO
+//! \param:   TODO
+//! ----------------------------------------------------------------------------
 int print_usage(void)
 {
         printf("Usage: \n");
@@ -42,24 +38,22 @@ int print_usage(void)
         printf("     ec_encrypt decrypt <key> <text>\n");
         return 0;
 }
-
-/*******************************************************************************
- * main
- *******************************************************************************/
+//! ----------------------------------------------------------------------------
+//! \details: TODO
+//! \return:  TODO
+//! \param:   TODO
+//! ----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-
         ec_action_t ec_action = EC_ACTION_ENCRYPT;
         char *key = NULL;
         char *string = NULL;
-
         if (argc == 2 &&
             strcmp("--version", argv[1]) == 0)
         {
                 fprintf(stderr, "EC Token encryption and decryption utility.  Version: 3.0.0\n");
                 return 0;
         }
-
         // Action specified
         if(argc == 4)
         {
@@ -95,7 +89,6 @@ int main(int argc, char **argv)
                 print_usage();
                 return -1;
         }
-
         size_t l_key_len = strlen(key);
         size_t l_string_len = strlen(string);
         if (ec_action == EC_ACTION_ENCRYPT)
@@ -110,7 +103,6 @@ int main(int argc, char **argv)
                         printf("Encryption failed: %d\n", l_ret);
                         return -1;
                 }
-
                 printf("%s\n", l_token);
         }
         else if (ec_action == EC_ACTION_DECRYPT)
@@ -126,9 +118,7 @@ int main(int argc, char **argv)
                         printf("Decryption failed: %d\n", l_ret);
                         return -1;
                 }
-
                 printf("%s\n", l_plaintext);
         }
-
         return 0;
 }
