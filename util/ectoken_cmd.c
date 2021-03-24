@@ -31,11 +31,11 @@ int print_usage(void)
 {
         printf("Usage: \n");
         printf(" To Encrypt:\n");
-        printf("     ec_encrypt <key> <text>\n");
+        printf("     ectoken <key> <text>\n");
         printf(" or:\n");
-        printf("     ec_encrypt encrypt <key> <text>\n");
+        printf("     ectoken encrypt <key> <text>\n");
         printf(" To Decrypt:\n");
-        printf("     ec_encrypt decrypt <key> <text>\n");
+        printf("     ectoken decrypt <key> <text>\n");
         return 0;
 }
 //! ----------------------------------------------------------------------------
