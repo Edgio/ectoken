@@ -25,8 +25,7 @@ To build, run the `make` command.
 
 ```sh
 ectoken>make
-gcc -m64 -O2 -Wall -Werror -std=gnu99 util/ec_encrypt.c -I. ectoken.c base64.c -o ectoken -lcrypto  -lm
-strip ectoken
+gcc -O2 -Wall -Werror -std=gnu99 util/ectoken_cmd.c -I. ectoken.c base64.c -o ectoken -lcrypto  -lm
 cc    -c -o ectoken.o ectoken.c
 cc    -c -o base64.o base64.c
 ar rcs libectoken.a ectoken.o base64.o
@@ -40,7 +39,7 @@ Run `make test` from the project directory.
 
 ```sh
 ectoken>make test
-gcc -O2 -Wall -Werror -std=gnu99 util/ec_encrypt.c -I. ectoken.c base64.c -o ectoken -lcrypto  -lm
+gcc -O2 -Wall -Werror -std=gnu99 util/ectoken_cmd.c -I. ectoken.c base64.c -o ectoken -lcrypto  -lm
 cc    -c -o ectoken.o ectoken.c
 cc    -c -o base64.o base64.c
 ar rcs libectoken.a ectoken.o base64.o
@@ -65,11 +64,11 @@ success
 Error wrong number of arguments specified
 Usage: 
  To Encrypt:
-     ec_encrypt <key> <text>
+     ectoken <key> <text>
  or:
-     ec_encrypt encrypt <key> <text>
+     ectoken encrypt <key> <text>
  To Decrypt:
-     ec_encrypt decrypt <key> <text>
+     ectoken decrypt <key> <text>
 ```
 
 ### Encrypt
