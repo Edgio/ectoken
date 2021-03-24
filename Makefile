@@ -21,8 +21,8 @@ all: ectoken libectoken.a
 # ------------------------------------------------------------------------------
 # ectoken
 # ------------------------------------------------------------------------------
-ectoken: util/ec_encrypt.c ectoken.c base64.c
-	gcc -O2 -Wall -Werror -std=gnu99 util/ec_encrypt.c -I. ectoken.c base64.c -o ectoken $(OPENSSL_LIBS) $(OPENSSL_INCLUDE) -lm
+ectoken: util/ectoken_cmd.c ectoken.c base64.c
+	gcc -O2 -Wall -Werror -std=gnu99 util/ectoken_cmd.c -I. ectoken.c base64.c -o ectoken $(OPENSSL_LIBS) $(OPENSSL_INCLUDE) -lm
 # ------------------------------------------------------------------------------
 # libectoken
 # ------------------------------------------------------------------------------
