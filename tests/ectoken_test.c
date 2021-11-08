@@ -1,5 +1,5 @@
 //! ----------------------------------------------------------------------------
-//! Copyright Verizon.
+//! Copyright Edgecast Inc.
 //!
 //! \file:    ectoken_test.c
 //! \details: TODO

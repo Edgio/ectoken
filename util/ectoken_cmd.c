@@ -1,5 +1,5 @@
 //! ----------------------------------------------------------------------------
-//! Copyright Verizon.
+//! Copyright Edgecast Inc.
 //!
 //! \file:    ec_encrypt.c
 //! \details: TODO
