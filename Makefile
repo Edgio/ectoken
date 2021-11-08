@@ -1,16 +1,7 @@
 # ------------------------------------------------------------------------------
-# Copyright Verizon.
-#
-# \file:    ectoken.h
-# \details: TODO
-#
-# Licensed under the terms of the Apache 2.0 open source license.
-# Please refer to the LICENSE file in the project root for the terms.
-# ------------------------------------------------------------------------------
-.PHONY: all
-# ------------------------------------------------------------------------------
 # setup
 # ------------------------------------------------------------------------------
+.PHONY: all
 OPENSSL_ROOT=
 OPENSSL_INCLUDE=
 OPENSSL_LIBS=-lcrypto
