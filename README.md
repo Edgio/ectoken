@@ -1,5 +1,5 @@
 # ectoken
-> _C implementation of EdgeCast token (`ectoken`)_
+> _C implementation of Edgio token (`ectoken`)_
 
 
 ## Table of Contents
@@ -13,7 +13,7 @@
 
 ## Background
 
-C implementation of the "EdgeCast Token" (`ectoken`), an [AES-GCM](https://tools.ietf.org/html/rfc5288) token.
+C implementation of the "Edgio Token" (`ectoken`), an [AES-GCM](https://tools.ietf.org/html/rfc5288) token.
 
 ## Install
 
